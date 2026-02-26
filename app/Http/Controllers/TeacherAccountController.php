@@ -3,13 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use Inertia\Inertia;
 
 class TeacherAccountController extends Controller
 {
-    public function createTeacherAccount(Request $request)
+    public function store(Request $request)
     {
         $request->validate([
             'name' => 'required|string|max:240',
@@ -50,16 +50,56 @@ class TeacherAccountController extends Controller
         return response()->json($teacher);
     }
 
-    public function update(Request $request, User $user)
+    public function update(Request $request, $id)
     {
+        $teacher = User::where('role', 'teacher')->find($id);
+
+        if (!$teacher) {
+            return response()->json([
+                'message' => 'Teacher not found'
+            ], 404);
+        }
+
         $request->validate([
-            'name' => 'sometimes|string|max:255',
-            'email' => 'sometimes|email|users:email',
-            'password' => Hash::make($request->password)
+            'name' => 'sometimes|string|max:240',
+            'email' => 'sometimes|email|unique:users,email,' . $id,
+            'password' => 'sometimes|string|min:6',
         ]);
 
-        $teacher = User::update([
+        if ($request->name) {
+            $teacher->name = $request->name;
+        }
 
+        if ($request->email) {
+            $teacher->email = $request->email;
+        }
+
+        if ($request->password) {
+            $teacher->password = Hash::make($request->password);
+        }
+
+        $teacher->save();
+
+        return response()->json([
+            'message' => 'Teacher updated successfully',
+            'data' => $teacher,
+        ]);
+    }
+
+    public function destroy($id) 
+    {
+        $teacher = User::where('role', 'teacher')->find($id);
+
+        if (!$teacher) {
+            return response()->json([
+                'message' => 'Teacher not found',
+            ], 404);
+        }
+
+        $teacher->delete();
+
+        return response()->json([
+            'message' => 'Teacher deleted successfully',
         ]);
     }
 }
