@@ -6,9 +6,17 @@ use Illuminate\Database\Eloquent\Model;
 
 class Student extends Model
 {
-    
-    public function enrollment()
+    protected $fillable = [
+        'LRN',
+        'firstname',
+        'middlename',
+        'lastname',
+        'birthdate',
+        'gender'
+    ];
+
+    public function enrollments()
     {
-        return $this->belongsTo(Enrollment::class);
+        return $this->hasMany(Enrollment::class);
     }
 }

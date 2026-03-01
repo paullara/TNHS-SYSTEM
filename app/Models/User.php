@@ -19,10 +19,13 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
-        'name',
+        'firstname',
+        'middlename',
+        'lastname',
         'email',
         'password',
-        'role'
+        'role',
+        'username'
     ];
 
     /**
@@ -51,5 +54,10 @@ class User extends Authenticatable
     public function teacherSubjects()
     {
         return $this->hasMany(TeacherSubject::class);
+    }
+
+    public function grades()
+    {
+        return $this->hasMany(Grade::class, 'teacher_id');
     }
 }

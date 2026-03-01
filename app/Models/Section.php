@@ -6,7 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Section extends Model
 {
-    //
+    protected $fillable = [
+        'name',
+        'grade_level_id'
+    ];
 
     public function gradeLevels()
     {
@@ -15,6 +18,6 @@ class Section extends Model
 
     public function enrollment()
     {
-        return $this->belongsTo(Enrollment::class);
+        return $this->hasMany(Enrollment::class);
     }
 }

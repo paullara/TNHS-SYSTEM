@@ -6,20 +6,23 @@ use Illuminate\Database\Eloquent\Model;
 
 class GradeLevel extends Model
 {
-    //
+    protected $fillable = [
+        'name',
+    ];
 
     public function sections()  
     {
-        return $this->hasMany(GradeLevel::class);
+        return $this->hasMany(Section::class);
     }
 
     public function enrollment()
     {
-        return $this->belongsTo(Enrollment::class);
+        return $this->hasMany(Enrollment::class);
     }
 
     public function subjects()
     {
-        return $this->belongsTo(Subject::class);
+        return $this->hasMany(Subject::class);
     }
 }
+ 

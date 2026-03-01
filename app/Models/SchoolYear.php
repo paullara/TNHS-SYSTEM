@@ -6,15 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class SchoolYear extends Model
 {
-    //
+    protected $fillable = [
+        'school_year',
+        'is_active',
+    ];
 
-    public function enrollment()
+    public function enrollments()
     {
-        return $this->belongsTo(Enrollment::class);
-    }
-
-    public function schoolYear()
-    {
-        return $this->belongsTo(SchoolYear::class);
+        return $this->hasMany(Enrollment::class);
     }
 }

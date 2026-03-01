@@ -6,25 +6,35 @@ use Illuminate\Database\Eloquent\Model;
 
 class Enrollment extends Model
 {
-    //
+    protected $fillable = [
+        'student_id',
+        'school_year_id',
+        'grade_level_id',
+        'section_id',
+    ];
 
-    public function students()
+    public function student()
     {
-        return $this->hasMany(Student::class);
+        return $this->belongsTo(Student::class);
     }
 
-    public function schoolYears()
+    public function schoolYear()
     {
-        return $this->hasMany(SchoolYear::class);
+        return $this->belongsTo(SchoolYear::class);
     }
 
-    public function gradeLevels()
+    public function gradeLevel()
     {
-        return $this->hasMany(GradeLevel::class);
+        return $this->belongsTo(GradeLevel::class);
     }
 
-    public function sections()
+    public function section()
     {
-        return $this->hasMany(Section::class);
+        return $this->belongsTo(Section::class);
+    }
+
+    public function grade()
+    {
+        return $this->hasMany(Grade::class);
     }
 }
