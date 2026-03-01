@@ -57,38 +57,38 @@ class TeacherAccountController extends Controller
     }
 
     public function update(Request $request, $id)
-{
-    $teacher = User::where('role', 'teacher')->find($id);
+    {
+        $teacher = User::where('role', 'teacher')->find($id);
 
-    if (!$teacher) {
+        if (!$teacher) {
+            return response()->json([
+                'message' => 'Teacher not found'
+            ], 404);
+        }
+
+        $request->validate([
+            'username' => 'sometimes|string|max:240',
+            'firstname' => 'sometimes|string|max:240',
+            'middlename' => 'sometimes|string|max:240',
+            'lastname' => 'sometimes|string|max:240',
+            'email' => 'sometimes|email|unique:users,email,' . $teacher->id,
+            'password' => 'sometimes|string|min:6',
+        ]);
+
+        $teacher->update($request->only([
+            'username',
+            'firstname',
+            'middlename',
+            'lastname',
+            'email',
+            'password'
+        ]));
+
         return response()->json([
-            'message' => 'Teacher not found'
-        ], 404);
+            'message' => 'Teacher updated successfully',
+            'data' => $teacher,
+        ]);
     }
-
-    $request->validate([
-        'username' => 'sometimes|string|max:240',
-        'firstname' => 'sometimes|string|max:240',
-        'middlename' => 'sometimes|string|max:240',
-        'lastname' => 'sometimes|string|max:240',
-        'email' => 'sometimes|email|unique:users,email,' . $teacher->id,
-        'password' => 'sometimes|string|min:6',
-    ]);
-
-    $teacher->update($request->only([
-        'username',
-        'firstname',
-        'middlename',
-        'lastname',
-        'email',
-        'password'
-    ]));
-
-    return response()->json([
-        'message' => 'Teacher updated successfully',
-        'data' => $teacher,
-    ]);
-}
 
     public function destroy($id) 
     {

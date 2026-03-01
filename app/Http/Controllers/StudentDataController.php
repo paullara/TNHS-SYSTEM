@@ -7,10 +7,10 @@ use App\Models\Student;
 
 class StudentDataController extends Controller
 {
-    public function store()
+    public function store(Request $request)
     {
         $request->validate([
-            'LRN' => 'required|integer|max:20',
+            'LRN' => 'required|integer',
             'firstname' => 'required|string|max:255',
             'middlename' => 'required|string|max:255',
             'lastname' => 'required|string|max:255',
@@ -42,9 +42,15 @@ class StudentDataController extends Controller
 
     public function show($id)
     {
-        $student = User::all();
+        $student = Student::all();
 
         $targetStudent = $student->find($id);
+
+        if (!$targetStudent) {
+            return response()->json([
+                'message' => 'Student not found'
+            ], 404);
+        }
 
         return response()->json([
             $targetStudent
@@ -64,12 +70,26 @@ class StudentDataController extends Controller
         }
 
         $request->validate([
-            'LRN' => 'sometimes|string|max:240',
+            'LRN' => 'sometimes|integer',
             'firstname' => 'sometimes|string:max:240',
             'middlename' => 'sometimes|string:max:240',
-            'lastname' => 'sometimes|sting:max:240',
+            'lastname' => 'sometimes|string:max:240',
             'birthdate' => 'sometimes|date',
             'gender' => 'sometimes|string|max:240',
+        ]);
+
+        $targetStudent->update($request->only([
+            'LRN',
+            'firstname',
+            'middlename',
+            'lastname',
+            'birthdate',
+            'gender',
+        ]));
+
+        return response()->json([
+            'message' => 'Student updated successfully',
+            'data' => $targetStudent,
         ]);
     }
 }

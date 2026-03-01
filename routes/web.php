@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TeacherAccountController;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\TeacherController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -25,12 +27,14 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::prefix('teachers')->group(function () {
-    Route::post('/', [TeacherAccountController::class, 'store']);
-    Route::get('/', [TeacherAccountController::class, 'index']);
-    Route::get('/{id}', [TeacherAccountController::class, 'show']);
-    Route::put('/{id}', [TeacherAccountController::class, 'update']);
-    Route::delete('/{id}', [TeacherAccountController::class, 'destroy']);
+//Admin
+Route::middleware('auth')->group(function () {
+    Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+});
+
+//Teacher
+Route::middleware('auth')->group(function () {
+    Route::get('/teacher/dashboard', [TeacherController::class, 'dashboard'])->name('teacher.dashboard');
 });
 
 require __DIR__.'/auth.php';
