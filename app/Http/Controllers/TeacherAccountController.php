@@ -9,6 +9,11 @@ use Inertia\Inertia;
 
 class TeacherAccountController extends Controller
 {
+    public function create()
+    {
+        return Inertia::render('Admin/CreateTeacherAccount');
+    }
+
     public function store(Request $request)
     {
         $request->validate([
@@ -30,17 +35,21 @@ class TeacherAccountController extends Controller
             'role' => 'teacher'
         ]);
 
-        return response()->json([
-            'message' => 'Teacher account created successfully',
-            'data' => $teacher
-        ], 201);
+        // return response()->json([
+        //     'message' => 'Teacher account created successfully',
+        //     'data' => $teacher
+        // ], 201);
+
+        return redirect()->route('teachers.index')->with('message', 'Teacher account created successfully!');
     }
 
     public function index()
     {
         $teachers = User::where('role', 'teacher')->get();
 
-        return response()->json($teachers);
+        return Inertia::render('Admin/TeacherList', [
+            'teachers' => $teachers,
+        ]);
     }
 
     public function show($id)

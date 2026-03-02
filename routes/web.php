@@ -30,6 +30,8 @@ Route::middleware('auth')->group(function () {
 //Admin
 Route::middleware('auth')->group(function () {
     Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+    Route::get('/teachers', [AdminController::class, 'teachersAccount'])->name('teachers.index');
+    Route::resource('teachers', TeacherAccountController::class);
 });
 
 //Teacher
