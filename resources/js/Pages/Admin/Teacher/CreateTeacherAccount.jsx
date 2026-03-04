@@ -5,7 +5,6 @@ import InputError from "@/Components/InputError";
 import PrimaryButton from "@/Components/PrimaryButton";
 import TextInput from "@/Components/TextInput";
 import { Head, useForm } from "@inertiajs/react";
-import axios from "axios";
 
 export default function CreateTeacherAccount() {
     const { data, setData, post, processing, errors, reset } = useForm({

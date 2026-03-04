@@ -36,6 +36,12 @@ export default function AdminLayout({ header, children }) {
                                 >
                                     Create
                                 </NavLink>
+                                <NavLink
+                                    href={route("teachers.index")}
+                                    active={route().current("teachers.index")}
+                                >
+                                    Teachers
+                                </NavLink>
                             </div>
                         </div>
 

@@ -11,7 +11,7 @@ class TeacherAccountController extends Controller
 {
     public function create()
     {
-        return Inertia::render('Admin/CreateTeacherAccount');
+        return Inertia::render('Admin/Teacher/CreateTeacherAccount');
     }
 
     public function store(Request $request)
@@ -47,7 +47,7 @@ class TeacherAccountController extends Controller
     {
         $teachers = User::where('role', 'teacher')->get();
 
-        return Inertia::render('Admin/TeacherList', [
+        return Inertia::render('Admin/Teacher/TeacherList', [
             'teachers' => $teachers,
         ]);
     }
@@ -63,6 +63,13 @@ class TeacherAccountController extends Controller
         }
 
         return response()->json($teacher);
+    }
+
+    public function edit(User $teacher)
+    {
+        return Inertia::render('Admin/Teacher/EditTeacherAccount', [
+            'user' => $teacher,
+        ]);
     }
 
     public function update(Request $request, $id)
@@ -111,8 +118,10 @@ class TeacherAccountController extends Controller
 
         $teacher->delete();
 
-        return response()->json([
-            'message' => 'Teacher deleted successfully',
-        ]);
+        // return response()->json([
+        //     'message' => 'Teacher deleted successfully',
+        // ]);
+
+        return redirect()->route('teachers.index')->with('message', 'Teacher account deleted successfully!');
     }
 }
