@@ -54,6 +54,12 @@ export default function AdminLayout({ header, children }) {
                                 >
                                     School Year
                                 </NavLink>
+                                <NavLink
+                                    href={route("gradelevel.page")}
+                                    active={route().current("gradelevel.page")}
+                                >
+                                    Grade Level
+                                </NavLink>
                             </div>
                         </div>
 

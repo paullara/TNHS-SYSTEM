@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TeacherAccountController;
 use App\Http\Controllers\SectionController;
+use App\Http\Controllers\GradeLevelController;
 use App\Http\Controllers\SchoolYearController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\TeacherController;
@@ -37,6 +38,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/teachers/edit/{teacher}', [TeacherAccountController::class, 'edit'])->name('teachers.edit');
     Route::get('/sections', [SectionController::class, 'sectionList'])->name('section.list');
     Route::get('/school-year', [SchoolYearController::class, 'syList'])->name('sy.list');
+    Route::get('/grade-level', [GradeLevelController::class, 'gradeLevelPage'])->name('gradelevel.page');
 });
 
 //Teacher

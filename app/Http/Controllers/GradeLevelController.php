@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\GradeLevel;
+use Inertia\Inertia;
 
 class GradeLevelController extends Controller
 {
@@ -14,6 +15,11 @@ class GradeLevelController extends Controller
         return response()->json([
             'gradeLevel' => $gradeLevel,
         ]);
+    }
+
+    public function gradeLevelPage()
+    {
+        return Inertia::render('Admin/GradeLevel/GradeLevel');
     }
 
     public function store(Request $request)
