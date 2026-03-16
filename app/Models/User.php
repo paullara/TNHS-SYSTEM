@@ -60,4 +60,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Grade::class, 'teacher_id');
     }
+
+    public function sections()
+    {
+        return $this->hasMany(Section::class);
+    }
 }

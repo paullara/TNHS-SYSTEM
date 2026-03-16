@@ -8,12 +8,18 @@ class Section extends Model
 {
     protected $fillable = [
         'name',
-        'grade_level_id'
+        'grade_level_id',
+        'adviser_id',
     ];
 
-    public function gradeLevels()
+    public function gradeLevel()
     {
         return $this->belongsTo(GradeLevel::class);
+    }
+
+    public function adviser()
+    {
+        return $this->belongsTo(User::class, 'adviser_id');
     }
 
     public function enrollment()

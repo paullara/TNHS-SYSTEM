@@ -1,160 +1,181 @@
-import { React, useState } from "react";
 import AdminLayout from "@/Layouts/AdminLayout";
-import InputLabel from "@/Components/InputLabel";
+import { useState, useEffect } from "react";
+import axios from "axios";
 import InputError from "@/Components/InputError";
-import PrimaryButton from "@/Components/PrimaryButton";
-import TextInput from "@/Components/TextInput";
-import { Head, useForm } from "@inertiajs/react";
 
 export default function CreateTeacherAccount() {
-    const { data, setData, post, processing, errors, reset } = useForm({
+    const [teachers, setTeachers] = useState([]);
+    const [formData, setFormData] = useState({
         firstname: "",
         middlename: "",
         lastname: "",
         email: "",
         password: "",
         password_confirmation: "",
-        username: "",
     });
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
+    const [errors, setErrors] = useState({});
+    const [loading, setLoading] = useState(false);
 
-        post(route("teachers.store"), {
-            onSuccess: () => reset(),
-        });
+    const handleChange = (e) => {
+        const { name, value, files } = e.target;
+        setFormData((prev) => ({
+            ...prev,
+            [name]: files ? files[0] : value,
+        }));
     };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        setErrors({});
+
+        try {
+            await axios.post("/api/teachers", formData);
+
+            alert("Teacher account created successfully");
+
+            setFormData({
+                username: "",
+                firstname: "",
+                middlename: "",
+                lastname: "",
+                email: "",
+                password: "",
+                password_confirmation: "",
+            });
+        } catch (err) {
+            if (err.response?.data?.errors) {
+                setErrors(err.response.data.errors);
+            }
+        } finally {
+            setLoading(false);
+        }
+    };
+
     return (
         <AdminLayout>
-            <Head title="Create Account" />
-
-            <div className="max-w-4xl mx-auto p-6 bg-white shadow rounded mt-6">
-                <h2 className="text-lg font-semibold">
+            <div className="max-w-4xl mx-auto px-6 py-10">
+                <h2 className="text-2xl font-semibold mb-6 text-gray-600">
                     Create Teacher Account
                 </h2>
+
                 <form
                     onSubmit={handleSubmit}
-                    className="grid grid-cols-1 md:grid-cols-2 gap-4"
+                    className="grid grid-cols-1 md:grid-cols-2 gap-6"
                 >
                     <div>
-                        <InputLabel htmlFor="username" value="Username" />
-                        <TextInput
-                            id="username"
+                        <label className="block text-sm text-gray-600 mb-1">
+                            Username
+                        </label>
+
+                        <input
                             type="text"
-                            value={data.username}
-                            onChange={(e) =>
-                                setData("username", e.target.value)
-                            }
-                            className="mt-1 block w-full"
+                            name="username"
+                            value={formData.username}
+                            onChange={handleChange}
+                            className="border rounded-md p-3 w-full"
+                            placeholder="Username"
                         />
-                        <InputError
-                            message={errors.username}
-                            className="mt-2"
+                        <InputError message={errors.username} />
+                    </div>
+
+                    <div>
+                        <label className="block text-sm text-gray-600 mb-1">
+                            First Name
+                        </label>
+                        <input
+                            type="text"
+                            name="firstname"
+                            value={formData.firstname}
+                            onChange={handleChange}
+                            className="border rounded-md p-3 w-full"
+                            placeholder="First Name"
                         />
+                        <InputError message={errors.firstname} />
                     </div>
                     <div>
-                        <InputLabel htmlFor="firstname" value="Firstname" />
-                        <TextInput
-                            id="firstname"
+                        <label className="block text-sm text-gray-600 mb-1">
+                            Middle Name
+                        </label>
+                        <input
                             type="text"
-                            value={data.firstname}
-                            onChange={(e) =>
-                                setData("firstname", e.target.value)
-                            }
-                            className="mt-1 block w-full"
-                        />
-                        <InputError
-                            message={errors.firstname}
-                            className="mt-2"
-                        />
-                    </div>
-                    <div>
-                        <InputLabel htmlFor="middlename" value="Middle Name" />
-                        <TextInput
-                            id="middlename"
-                            type="text"
-                            value={data.middlename}
+                            name="middlename"
+                            value={formData.middlename}
+                            onChange={handleChange}
+                            className="border rounded-md p-3 w-full"
                             placeholder="Optional"
-                            onChange={(e) =>
-                                setData("middlename", e.target.value)
-                            }
-                            className="mt-1 block w-full"
                         />
-                        <InputError
-                            message={errors.middlename}
-                            className="mt-2"
-                        />
+                        <InputError message={errors.middlename} />
                     </div>
                     <div>
-                        <InputLabel htmlFor="lastname" value="Last Name" />
-
-                        <TextInput
-                            id="lastname"
+                        <label className="block text-sm text-gray-600 mb-1">
+                            Last Name
+                        </label>
+                        <input
                             type="text"
-                            value={data.lastname}
-                            onChange={(e) =>
-                                setData("lastname", e.target.value)
-                            }
-                            className="mt-1 block w-full"
-                        />
-
-                        <InputError
-                            message={errors.lastname}
-                            className="mt-2"
+                            name="lastname"
+                            value={formData.lastname}
+                            onChange={handleChange}
+                            className="border rounded-md p-3 w-full"
+                            placeholder="Last Name"
                         />
                     </div>
                     <div>
-                        <InputLabel htmlFor="email" value="Email" />
-                        <TextInput
-                            id="email"
+                        <label className="block text-sm text-gray-600 mb-1">
+                            Email
+                        </label>
+                        <input
                             type="email"
-                            value={data.email}
-                            onChange={(e) => setData("email", e.target.value)}
-                            className="mt-1 block w-full"
+                            name="email"
+                            value={formData.email}
+                            onChange={handleChange}
+                            className="border rounded-md p-3 w-full"
+                            placeholder="Email"
                         />
-                        <InputError message={errors.email} className="mt-2" />
+                        <InputError message={errors.email} />
                     </div>
+
                     <div>
-                        <InputLabel htmlFor="password" value="Password" />
-                        <TextInput
-                            id="password"
+                        <label className="block text-sm text-gray-600 mb-1">
+                            Password
+                        </label>
+
+                        <input
                             type="password"
-                            value={data.password}
-                            onChange={(e) =>
-                                setData("password", e.target.value)
-                            }
-                            className="mt-1 block w-full"
-                        />
-                        <InputError
-                            message={errors.password}
-                            className="mt-2"
-                        />
-                    </div>
-                    <div>
-                        <InputLabel
-                            htmlFor="password_confirmation"
-                            value="Password Confirmation"
+                            name="password"
+                            value={formData.password}
+                            onChange={handleChange}
+                            className="border w-full rounded-md p-3"
+                            placeholder="Password"
                         />
 
-                        <TextInput
-                            id="password_confirmation"
-                            type="password"
-                            value={data.password_confirmation}
-                            onChange={(e) =>
-                                setData("password_confirmation", e.target.value)
-                            }
-                            className="mt-1 w-full block"
-                        />
-                        <InputError
-                            message={errors.password_confirmation}
-                            className="mt-2"
-                        />
+                        <InputError message={errors.password} />
+                    </div>
 
-                        <div className="col-span-1 md:col-span-2 mt-4">
-                            <PrimaryButton disabled={processing}>
-                                Create Account
-                            </PrimaryButton>
-                        </div>
+                    <div>
+                        <label className="block text-sm text-gray-600 mb-1">
+                            Confirm Password
+                        </label>
+
+                        <input
+                            type="password"
+                            name="password_confirmation"
+                            value={formData.password_confirmation}
+                            onChange={handleChange}
+                            className="border rounded-md p-3 w-full"
+                            placeholder="Password confirmation"
+                        />
+                        <InputError message={errors.password_confirmation} />
+                    </div>
+
+                    <div className="flex items-center justify-center">
+                        <button
+                            onSubmit={handleSubmit}
+                            className="w-80  h-10 bg-blue-800 hover:bg-blue-900 border rounded-md text-white"
+                        >
+                            Create Account
+                        </button>
                     </div>
                 </form>
             </div>

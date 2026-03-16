@@ -7,7 +7,7 @@ import InputError from "@/Components/InputError";
 import TextInput from "@/Components/TextInput";
 import PrimaryButton from "@/Components/PrimaryButton";
 
-export default function EditTeacherAccount({ user }) {
+export default function TestEditTeacherAccount({ user }) {
     const [formData, setFormData] = useState({
         username: user.username || "",
         firstname: user.firstname || "",
@@ -22,7 +22,6 @@ export default function EditTeacherAccount({ user }) {
     const handleChange = (e) => {
         const { name, value } = e.target;
 
-        console.log(name, value);
         setFormData((prev) => ({
             ...prev,
             [name]: value,
@@ -111,7 +110,7 @@ export default function EditTeacherAccount({ user }) {
                 </div>
 
                 <div className="mt-4">
-                    <PrimaryButton type="submit" disabled={loading}>
+                    <PrimaryButton disabled={loading}>
                         {loading ? "Updating..." : "Update Account"}
                     </PrimaryButton>
                 </div>

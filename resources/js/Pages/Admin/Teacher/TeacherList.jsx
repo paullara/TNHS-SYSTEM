@@ -1,11 +1,33 @@
 import AdminLayout from "@/Layouts/AdminLayout";
-import { React } from "react";
+import { React, useState, useEffect } from "react";
 import { Head, Link, router } from "@inertiajs/react";
+import axios from "axios";
 
-export default function TeacherList({ teachers = [] }) {
-    const handleDelete = (id) => {
-        if (confirm("Are you sure you want to delete this teacher?")) {
-            router.delete(`/teachers/${id}`);
+export default function TeacherList() {
+    const [teachers, setTeachers] = useState([]);
+
+    useEffect(() => {
+        const fetchTeachers = async () => {
+            try {
+                const res = await axios.get("/api/teachers");
+                setTeachers(res.data.teachers);
+            } catch (error) {
+                console.error("Error fetching teachers data.");
+            }
+        };
+        fetchTeachers();
+    }, []);
+    const handleDelete = async (id) => {
+        if (!confirm("Are you sure you want to delete this teacher?")) return;
+
+        try {
+            await axios.delete(`/api/teachers/${id}`);
+
+            alert("Teacher deleted successfully");
+
+            router.visit("/teachers");
+        } catch (error) {
+            console.error("Delete failed", error);
         }
     };
     return (
@@ -58,7 +80,7 @@ export default function TeacherList({ teachers = [] }) {
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap space-x-2">
                                         <Link
-                                            href={`/teachers/${teacher.id}/edit`}
+                                            href={`/teachers/edit/${teacher.id}`}
                                             className="text-indigo-600 hover:text-indigo-900"
                                         >
                                             Edit

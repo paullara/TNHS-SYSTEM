@@ -13,8 +13,10 @@ return new class extends Migration
     {
         Schema::create('school_years', function (Blueprint $table) {
             $table->id();
-            $table->string('school_year');
-            $table->boolean('is_active')->default(false);
+            $table->string('label')->nullable()->default('School Year');
+            $table->date('start_date');
+            $table->date('end_date');
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
     }

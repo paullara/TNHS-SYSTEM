@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TeacherAccountController;
+use App\Http\Controllers\SectionController;
+use App\Http\Controllers\SchoolYearController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\TeacherController;
 use Illuminate\Foundation\Application;
@@ -29,9 +31,12 @@ Route::middleware('auth')->group(function () {
 
 //Admin
 Route::middleware('auth')->group(function () {
-    Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
-    Route::get('/teachers', [AdminController::class, 'teachersAccount'])->name('teachers.index');
-    Route::resource('teachers', TeacherAccountController::class);
+    Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard'); 
+    Route::get('teachers', [TeacherAccountController::class, 'teacherList'])->name('teachers.list');
+    Route::get('/teachers/create', [TeacherAccountController::class, 'create'])->name('teachers.create');
+    Route::get('/teachers/edit/{teacher}', [TeacherAccountController::class, 'edit'])->name('teachers.edit');
+    Route::get('/sections', [SectionController::class, 'sectionList'])->name('section.list');
+    Route::get('/school-year', [SchoolYearController::class, 'syList'])->name('sy.list');
 });
 
 //Teacher

@@ -35,21 +35,30 @@ class TeacherAccountController extends Controller
             'role' => 'teacher'
         ]);
 
-        // return response()->json([
-        //     'message' => 'Teacher account created successfully',
-        //     'data' => $teacher
-        // ], 201);
+        return response()->json([
+            'message' => 'Teacher account created successfully',
+            'data' => $teacher
+        ], 201);
 
-        return redirect()->route('teachers.index')->with('message', 'Teacher account created successfully!');
+        // return redirect()->route('teachers.index')->with('message', 'Teacher account created successfully!');
     }
 
     public function index()
     {
         $teachers = User::where('role', 'teacher')->get();
 
-        return Inertia::render('Admin/Teacher/TeacherList', [
-            'teachers' => $teachers,
+        return response()->json([
+            'teachers' => $teachers
         ]);
+
+        // return Inertia::render('Admin/Teacher/TeacherList', [
+        //     'teachers' => $teachers,
+        // ]);
+    }
+
+    public function teacherList()
+    {
+        return Inertia::render('Admin/Teacher/TeacherList');
     }
 
     public function show($id)
@@ -72,6 +81,13 @@ class TeacherAccountController extends Controller
         ]);
     }
 
+    public function testEditTeacherAccount(User $teacher)
+    {
+        return Inertia::render('Admin/Teacher/TestEditTeacher', [
+            'user' => $teacher,
+        ]);
+    }
+
     public function update(Request $request, $id)
     {
         $teacher = User::where('role', 'teacher')->find($id);
@@ -88,7 +104,6 @@ class TeacherAccountController extends Controller
             'middlename' => 'sometimes|string|max:240',
             'lastname' => 'sometimes|string|max:240',
             'email' => 'sometimes|email|unique:users,email,' . $teacher->id,
-            'password' => 'sometimes|string|min:6',
         ]);
 
         $teacher->update($request->only([
@@ -97,13 +112,16 @@ class TeacherAccountController extends Controller
             'middlename',
             'lastname',
             'email',
-            'password'
         ]));
 
         return response()->json([
             'message' => 'Teacher updated successfully',
             'data' => $teacher,
         ]);
+
+        // return redirect()
+        //     ->route('teachers.index')
+        //     ->with('success', 'Teacher account updated successfully!');
     }
 
     public function destroy($id) 
@@ -118,10 +136,10 @@ class TeacherAccountController extends Controller
 
         $teacher->delete();
 
-        // return response()->json([
-        //     'message' => 'Teacher deleted successfully',
-        // ]);
+        return response()->json([
+            'message' => 'Teacher deleted successfully',
+        ]);
 
-        return redirect()->route('teachers.index')->with('message', 'Teacher account deleted successfully!');
+        // return redirect()->route('teachers.list')->with('message', 'Teacher account deleted successfully!');
     }
 }
