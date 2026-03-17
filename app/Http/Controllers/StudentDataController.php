@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Student;
+use Inertia\Inertia;
 
 class StudentDataController extends Controller
 {
@@ -31,6 +32,11 @@ class StudentDataController extends Controller
             'message' => 'Student data added successfully.',
             'data' => $student
         ], 201);
+    }
+
+    public function create()
+    {
+        return Inertia::render('Admin/Student/StudentCreate');
     }
 
     public function index()

@@ -60,6 +60,12 @@ export default function AdminLayout({ header, children }) {
                                 >
                                     Grade Level
                                 </NavLink>
+                                <NavLink
+                                    href={route("student.create")}
+                                    active={route().current("student.create")}
+                                >
+                                    Student Create
+                                </NavLink>
                             </div>
                         </div>
 

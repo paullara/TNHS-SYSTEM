@@ -1,10 +1,9 @@
 import AdminLayout from "@/Layouts/AdminLayout";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import axios from "axios";
 import InputError from "@/Components/InputError";
 
 export default function CreateTeacherAccount() {
-    const [teachers, setTeachers] = useState([]);
     const [formData, setFormData] = useState({
         firstname: "",
         middlename: "",

@@ -2,7 +2,9 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TeacherAccountController;
+use App\Http\Controllers\StudentDataController;
 use App\Http\Controllers\SectionController;
+use App\Http\Controllers\UnauthorizedController;
 use App\Http\Controllers\GradeLevelController;
 use App\Http\Controllers\SchoolYearController;
 use App\Http\Controllers\AdminController;
@@ -30,8 +32,10 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+Route::get('/unauthorized', [UnauthorizedController::class, 'unauthorized'])->name('unauthorized');
+
 //Admin
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard'); 
     Route::get('teachers', [TeacherAccountController::class, 'teacherList'])->name('teachers.list');
     Route::get('/teachers/create', [TeacherAccountController::class, 'create'])->name('teachers.create');
@@ -39,6 +43,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/sections', [SectionController::class, 'sectionList'])->name('section.list');
     Route::get('/school-year', [SchoolYearController::class, 'syList'])->name('sy.list');
     Route::get('/grade-level', [GradeLevelController::class, 'gradeLevelPage'])->name('gradelevel.page');
+    Route::get('/students', [StudentDataController::class, 'create'])->name('student.create');
 });
 
 //Teacher
