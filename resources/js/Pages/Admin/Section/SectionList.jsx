@@ -111,10 +111,7 @@ export default function SectionList() {
     useEffect(() => {
         fetchSections();
     }, []);
-    console.log(sections.adviser);
-    console.log("Teachers", teachers);
-    console.log("Grade Levels", gradeLevels);
-    console.log(sections);
+
     return (
         <AdminLayout>
             <div className="h-screen ">

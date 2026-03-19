@@ -66,6 +66,12 @@ export default function AdminLayout({ header, children }) {
                                 >
                                     Student Create
                                 </NavLink>
+                                <NavLink
+                                    href={route("subject.page")}
+                                    active={route().current("subject.page")}
+                                >
+                                    Subject Create
+                                </NavLink>
                             </div>
                         </div>
 

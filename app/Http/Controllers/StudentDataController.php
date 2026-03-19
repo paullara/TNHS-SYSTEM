@@ -11,7 +11,7 @@ class StudentDataController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'LRN' => 'required|integer',
+            'LRN' => 'required|string|max:20',
             'firstname' => 'required|string|max:255',
             'middlename' => 'required|string|max:255',
             'lastname' => 'required|string|max:255',
@@ -43,7 +43,9 @@ class StudentDataController extends Controller
     {
         $students = Student::all();
 
-        return response()->json($students);
+        return response()->json([
+            'students' => $students
+        ]);
     }
 
     public function show($id)
@@ -96,6 +98,17 @@ class StudentDataController extends Controller
         return response()->json([
             'message' => 'Student updated successfully',
             'data' => $targetStudent,
+        ]);
+    }
+
+    public function destroy($id) 
+    {
+        $student = Student::findOrFail($id);
+
+        $student->delete();
+
+        return response()->json([
+            'message' => 'Student deleted successfully'
         ]);
     }
 }

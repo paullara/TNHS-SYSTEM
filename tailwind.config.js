@@ -17,6 +17,7 @@ export default {
             },
             height: {
                 section_form: "100px",
+                student_form: "250px",
             },
         },
     },

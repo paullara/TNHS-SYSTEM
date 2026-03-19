@@ -1,17 +1,19 @@
 <?php
 
+use App\Http\Controllers\AdminController;
+use Illuminate\Foundation\Application;
+use App\Http\Controllers\GradeLevelController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\TeacherAccountController;
 use App\Http\Controllers\StudentDataController;
 use App\Http\Controllers\SectionController;
 use App\Http\Controllers\UnauthorizedController;
-use App\Http\Controllers\GradeLevelController;
+use App\Http\Controllers\TeacherAccountController;
 use App\Http\Controllers\SchoolYearController;
-use App\Http\Controllers\AdminController;
-use App\Http\Controllers\TeacherController;
-use Illuminate\Foundation\Application;
+use App\Http\Controllers\SubjectController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\TeacherController;
 use Inertia\Inertia;
+
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -44,6 +46,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/school-year', [SchoolYearController::class, 'syList'])->name('sy.list');
     Route::get('/grade-level', [GradeLevelController::class, 'gradeLevelPage'])->name('gradelevel.page');
     Route::get('/students', [StudentDataController::class, 'create'])->name('student.create');
+    Route::get('/subjects', [SubjectController::class, 'subjectPage'])->name('subject.page');
 });
 
 //Teacher

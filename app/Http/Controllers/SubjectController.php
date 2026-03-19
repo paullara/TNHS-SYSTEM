@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Subject;
+use Inertia\Inertia;
 
 class SubjectController extends Controller
 {
@@ -11,7 +12,14 @@ class SubjectController extends Controller
     {   
         $subjects = Subject::with('gradeLevel')->get();
 
-        return response()->json($subjects);
+        return response()->json([
+            'subjects' => $subjects
+        ]);
+    }
+
+    public function subjectPage()
+    {
+        return Inertia::render('Admin/Subject/SubjectPage');
     }
 
     public function store(Request $request)
