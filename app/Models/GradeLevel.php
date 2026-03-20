@@ -10,7 +10,7 @@ class GradeLevel extends Model
         'name',
     ];
 
-    public function sections()  
+    public function sections()
     {
         return $this->hasMany(Section::class);
     }
@@ -25,4 +25,3 @@ class GradeLevel extends Model
         return $this->hasMany(Subject::class);
     }
 }
- 

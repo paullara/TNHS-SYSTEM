@@ -2,16 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\TeacherSubject;
+use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class TeacherSubjectController extends Controller
 {
     public function index()
     {
-        $teacherSubject = TeacherSubject::with('teacher', 'subject')->get();
+        $teacherSubject = TeacherSubject::with('teacher', 'subject', 'schoolYear')->get();
 
-        return response()->json($teacherSubject);
+        return response()->json([
+            'teacherSubject' => $teacherSubject,
+        ]);
+    }
+
+    public function assignTeacherToSubject()
+    {
+        return Inertia::render('Admin/TeacherSubject/TeacherSubject');
     }
 
     public function store(Request $request)
@@ -26,15 +34,15 @@ class TeacherSubjectController extends Controller
 
         return response()->json([
             'message' => 'Teacher subject created successfully',
-            'data' => $teacherSubject
+            'data' => $teacherSubject,
         ], 201);
     }
 
-    public function show($id) 
+    public function show($id)
     {
         $teacherSubject = TeacherSubject::with('teacher', 'subject')->findOrFail($id);
 
-        if (!$teacherSubject) {
+        if (! $teacherSubject) {
             return response()->json([
                 'message' => 'Teacher subject not found',
             ], 404);
@@ -47,9 +55,9 @@ class TeacherSubjectController extends Controller
     {
         $teacherSubject = TeacherSubject::findOrFail($id);
 
-        if (!$teacherSubject) {
+        if (! $teacherSubject) {
             return response()->json([
-                'message' => 'Teacher subject not found'
+                'message' => 'Teacher subject not found',
             ], 404);
         }
 
@@ -63,7 +71,7 @@ class TeacherSubjectController extends Controller
 
         return response()->json([
             'message' => 'Teacher subject updated successfully',
-            'data' => $teacherSubject
+            'data' => $teacherSubject,
         ]);
     }
 
@@ -71,7 +79,7 @@ class TeacherSubjectController extends Controller
     {
         $teacherSubject = TeacherSubject::findOrFail($id);
 
-        if (!$teacherSubject) {
+        if (! $teacherSubject) {
             return response()->json([
                 'message' => 'Teacher subject not found',
             ], 404);
@@ -80,7 +88,7 @@ class TeacherSubjectController extends Controller
         $teacherSubject->delete();
 
         return response()->json([
-            'message' => 'Teacher subject deleted successfully'
+            'message' => 'Teacher subject deleted successfully',
         ]);
     }
 }

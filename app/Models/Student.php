@@ -12,7 +12,7 @@ class Student extends Model
         'middlename',
         'lastname',
         'birthdate',
-        'gender'
+        'gender',
     ];
 
     public function enrollments()

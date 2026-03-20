@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -13,7 +13,7 @@ class UserController extends Controller
         $users = User::all();
 
         return response()->json([
-            'users' => $users
+            'users' => $users,
         ]);
     }
 
@@ -25,7 +25,7 @@ class UserController extends Controller
             'middlename' => 'nullable|string|max:240',
             'lastname' => 'required|string|max:240',
             'email' => 'required|email|unique:users,email',
-            'password' => 'required|string|min:6'
+            'password' => 'required|string|min:6',
         ]);
 
         $user = User::create([
@@ -39,7 +39,7 @@ class UserController extends Controller
 
         return response()->json([
             'message' => 'Account creaed successfully!',
-            'data' => $user
+            'data' => $user,
         ]);
     }
 
@@ -47,14 +47,14 @@ class UserController extends Controller
     {
         $user = User::find($id);
 
-        if (!$user) {
+        if (! $user) {
             return respons()->json([
                 'message' => 'User not found',
             ], 404);
         }
 
         return response()->json([
-            $user
+            $user,
         ]);
     }
 
@@ -62,12 +62,12 @@ class UserController extends Controller
     {
         $user = User::find($id);
 
-        if (!$user) {
+        if (! $user) {
             return response()->json([
                 'message' => 'User not found',
             ], 404);
         }
-        
+
         $request->validate([
             'username' => 'sometimes|string|max:240',
             'firstname' => 'sometimes|string|max:240',
@@ -92,11 +92,11 @@ class UserController extends Controller
         ]);
     }
 
-    public function destroy($id) 
+    public function destroy($id)
     {
         $user = User::find($id);
-        
-        if (!$user) {
+
+        if (! $user) {
             return response()->json([
                 'message' => 'User not found',
             ], 404);

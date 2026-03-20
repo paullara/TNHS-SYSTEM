@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Student;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class StudentDataController extends Controller
@@ -30,7 +30,7 @@ class StudentDataController extends Controller
 
         return response()->json([
             'message' => 'Student data added successfully.',
-            'data' => $student
+            'data' => $student,
         ], 201);
     }
 
@@ -44,7 +44,7 @@ class StudentDataController extends Controller
         $students = Student::all();
 
         return response()->json([
-            'students' => $students
+            'students' => $students,
         ]);
     }
 
@@ -54,14 +54,14 @@ class StudentDataController extends Controller
 
         $targetStudent = $student->find($id);
 
-        if (!$targetStudent) {
+        if (! $targetStudent) {
             return response()->json([
-                'message' => 'Student not found'
+                'message' => 'Student not found',
             ], 404);
         }
 
         return response()->json([
-            $targetStudent
+            $targetStudent,
         ]);
     }
 
@@ -71,7 +71,7 @@ class StudentDataController extends Controller
 
         $targetStudent = $student->find($id);
 
-        if (!$targetStudent) {
+        if (! $targetStudent) {
             return response()->json([
                 'message' => 'Student not found',
             ], 404);
@@ -101,14 +101,14 @@ class StudentDataController extends Controller
         ]);
     }
 
-    public function destroy($id) 
+    public function destroy($id)
     {
         $student = Student::findOrFail($id);
 
         $student->delete();
 
         return response()->json([
-            'message' => 'Student deleted successfully'
+            'message' => 'Student deleted successfully',
         ]);
     }
 }

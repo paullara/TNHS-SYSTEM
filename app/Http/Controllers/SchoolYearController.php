@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\SchoolYear;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class SchoolYearController extends Controller
@@ -16,9 +16,9 @@ class SchoolYearController extends Controller
         $schoolYear = SchoolYear::all();
 
         return response()->json([
-            'schoolYear' => $schoolYear
+            'schoolYear' => $schoolYear,
         ]);
-        
+
         // return Inertia::render('Admin/SchoolYear/SchoolYearPage');
     }
 
@@ -65,14 +65,14 @@ class SchoolYearController extends Controller
     {
         $schoolYear = SchoolYear::find($id);
 
-        if (!$schoolYear) {
+        if (! $schoolYear) {
             return response()->json([
-                'message' => 'School year not found'
+                'message' => 'School year not found',
             ], 404);
         }
 
         return response()->json([
-            'schoolYear' => $schoolYear
+            'schoolYear' => $schoolYear,
         ]);
     }
 
@@ -81,7 +81,7 @@ class SchoolYearController extends Controller
      */
     public function edit(string $id)
     {
-        //for later
+        // for later
     }
 
     /**
@@ -91,9 +91,9 @@ class SchoolYearController extends Controller
     {
         $schoolYear = SchoolYear::find($id);
 
-        if (!$schoolYear) {
+        if (! $schoolYear) {
             return response()->json([
-                "message" => "School year not found", 
+                'message' => 'School year not found',
             ]. 404);
         }
 
@@ -111,7 +111,7 @@ class SchoolYearController extends Controller
 
         return response()->json([
             'message' => 'SY updated successfully',
-            'sy' => $schoolYear
+            'sy' => $schoolYear,
         ]);
     }
 
@@ -122,16 +122,16 @@ class SchoolYearController extends Controller
     {
         $schoolYear = SchoolYear::find($id);
 
-        if (!$schoolYear) {
+        if (! $schoolYear) {
             return response()->json([
-                'message' => 'School year not found!'
+                'message' => 'School year not found!',
             ], 404);
         }
 
         $schoolYear->delete();
 
         return response()->json([
-            'message' => 'School year deleted'
+            'message' => 'School year deleted',
         ]);
     }
 }

@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Grade;
+use Illuminate\Http\Request;
 
 class GradeController extends Controller
 {
@@ -45,7 +45,7 @@ class GradeController extends Controller
 
         return response()->json([
             'message' => 'Grade created succesfully',
-            'data' => $grade
+            'data' => $grade,
         ], 201);
     }
 
@@ -56,7 +56,7 @@ class GradeController extends Controller
     {
         $grades = Grade::with('enrollment', 'subject', 'teacher')->findOrFail($id);
 
-        if (!$grades) {
+        if (! $grades) {
             return response()->json([
                 'message' => 'Grade not found',
             ], 404);
@@ -80,7 +80,7 @@ class GradeController extends Controller
     {
         $grade = Grade::findOrFail($id);
 
-        if (!$grade) {
+        if (! $grade) {
             return response()->json([
                 'message' => 'Grade not found',
             ], 404);
@@ -101,7 +101,7 @@ class GradeController extends Controller
 
         return response()->json([
             'message' => 'Grade updated successfully',
-            'data' => $grade
+            'data' => $grade,
         ]);
     }
 
@@ -112,16 +112,16 @@ class GradeController extends Controller
     {
         $grade = Grade::findOrFail($id);
 
-        if (!$grade) {
+        if (! $grade) {
             return response()->json([
-                'message' => 'Grade not found'
+                'message' => 'Grade not found',
             ], 404);
         }
 
         $grade->delete();
 
         return response()->json([
-            'message' => 'Grade deleted successfully'
+            'message' => 'Grade deleted successfully',
         ]);
     }
 }

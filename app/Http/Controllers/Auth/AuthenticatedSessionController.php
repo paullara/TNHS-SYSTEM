@@ -36,9 +36,9 @@ class AuthenticatedSessionController extends Controller
         $user = auth()->user();
 
         switch ($user->role) {
-            case "admin":
+            case 'admin':
                 return redirect()->intended('/admin/dashboard');
-            case "teacher":
+            case 'teacher':
                 return redirect()->intended('/teacher/dashboard');
             default:
                 return redirect()->intended('/teacher/dashboard');
