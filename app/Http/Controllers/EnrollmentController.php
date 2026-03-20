@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Enrollment;
+use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class EnrollmentController extends Controller
 {
@@ -14,7 +15,9 @@ class EnrollmentController extends Controller
     {
         $enrollments = Enrollment::with('student', 'schoolYear', 'gradeLevel', 'section', 'grade')->get();
 
-        return response()->json($enrollments);
+        return response()->json([
+            'enrollments' => $enrollments,
+        ]);
     }
 
     /**
@@ -22,7 +25,7 @@ class EnrollmentController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('Admin/Enrollment/Enrollment');
     }
 
     /**
@@ -52,9 +55,9 @@ class EnrollmentController extends Controller
     {
         $enrollment = Enrollment::with('student', 'schoolYear', 'gradeLevel', 'section')->findOrFail($id);
 
-        if (!$enrollment) {
+        if (! $enrollment) {
             return response()->json([
-                'message' => 'Enrollment not found'
+                'message' => 'Enrollment not found',
             ], 404);
         }
 
@@ -76,7 +79,7 @@ class EnrollmentController extends Controller
     {
         $enrollment = Enrollment::findOrFail($id);
 
-        if (!$enrollment) {
+        if (! $enrollment) {
             return response()->json([
                 'message' => 'Enrollment not found',
             ], 404);
@@ -104,7 +107,7 @@ class EnrollmentController extends Controller
     {
         $enrollment = Enrollment::findOrFail($id);
 
-        if (!$enrollment) {
+        if (! $enrollment) {
             return response()->json([
                 'message' => 'Enrollment not found',
             ], 404);
@@ -113,7 +116,7 @@ class EnrollmentController extends Controller
         $enrollment->delete();
 
         return response()->json([
-            'message' => 'Enrollment successfully deleted'
+            'message' => 'Enrollment successfully deleted',
         ]);
     }
 }

@@ -72,6 +72,20 @@ export default function AdminLayout({ header, children }) {
                                 >
                                     Subject Create
                                 </NavLink>
+                                <NavLink
+                                    href={route("assign-subject")}
+                                    active={route().current("assign-subject")}
+                                >
+                                    Assign Subject
+                                </NavLink>
+                                <NavLink
+                                    href={route("enrollment.create")}
+                                    active={route().current(
+                                        "enrollment.create",
+                                    )}
+                                >
+                                    Enrollment
+                                </NavLink>
                             </div>
                         </div>
 

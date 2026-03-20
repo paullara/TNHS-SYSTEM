@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use App\Models\User;
 use Inertia\Inertia;
 
 class TeacherAccountController extends Controller
@@ -22,7 +22,7 @@ class TeacherAccountController extends Controller
             'middlename' => 'nullable|string|max:240',
             'lastname' => 'required|string|max:240',
             'email' => 'required|email|unique:users,email',
-            'password' => 'required|string|min:6'
+            'password' => 'required|string|min:6',
         ]);
 
         $teacher = User::create([
@@ -32,12 +32,12 @@ class TeacherAccountController extends Controller
             'lastname' => $request->lastname,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'role' => 'teacher'
+            'role' => 'teacher',
         ]);
 
         return response()->json([
             'message' => 'Teacher account created successfully',
-            'data' => $teacher
+            'data' => $teacher,
         ], 201);
 
         // return redirect()->route('teachers.index')->with('message', 'Teacher account created successfully!');
@@ -48,7 +48,7 @@ class TeacherAccountController extends Controller
         $teachers = User::where('role', 'teacher')->get();
 
         return response()->json([
-            'teachers' => $teachers
+            'teachers' => $teachers,
         ]);
 
         // return Inertia::render('Admin/Teacher/TeacherList', [
@@ -65,9 +65,9 @@ class TeacherAccountController extends Controller
     {
         $teacher = User::where('role', 'teacher')->find($id);
 
-        if (!$teacher) {
+        if (! $teacher) {
             return response()->json([
-               'message' => 'Teacher not found' 
+                'message' => 'Teacher not found',
             ], 404);
         }
 
@@ -92,9 +92,9 @@ class TeacherAccountController extends Controller
     {
         $teacher = User::where('role', 'teacher')->find($id);
 
-        if (!$teacher) {
+        if (! $teacher) {
             return response()->json([
-                'message' => 'Teacher not found'
+                'message' => 'Teacher not found',
             ], 404);
         }
 
@@ -103,7 +103,7 @@ class TeacherAccountController extends Controller
             'firstname' => 'sometimes|string|max:240',
             'middlename' => 'sometimes|string|max:240',
             'lastname' => 'sometimes|string|max:240',
-            'email' => 'sometimes|email|unique:users,email,' . $teacher->id,
+            'email' => 'sometimes|email|unique:users,email,'.$teacher->id,
         ]);
 
         $teacher->update($request->only([
@@ -124,11 +124,11 @@ class TeacherAccountController extends Controller
         //     ->with('success', 'Teacher account updated successfully!');
     }
 
-    public function destroy($id) 
+    public function destroy($id)
     {
         $teacher = User::where('role', 'teacher')->find($id);
 
-        if (!$teacher) {
+        if (! $teacher) {
             return response()->json([
                 'message' => 'Teacher not found',
             ], 404);

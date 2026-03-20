@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\GradeLevel;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class GradeLevelController extends Controller
@@ -25,7 +25,7 @@ class GradeLevelController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name'=> 'required|string|max:200',
+            'name' => 'required|string|max:200',
         ]);
 
         $gradeLevel = GradeLevel::create([
@@ -42,9 +42,9 @@ class GradeLevelController extends Controller
     {
         $gradeLevel = GradeLevel::find($id);
 
-        if (!$gradeLevel) {
+        if (! $gradeLevel) {
             return response()->json([
-                'message' => 'Grade level not found'
+                'message' => 'Grade level not found',
             ], 404);
         }
 
@@ -55,7 +55,7 @@ class GradeLevelController extends Controller
     {
         $gradeLevel = GradeLevel::find($id);
 
-        if (!$gradeLevel) {
+        if (! $gradeLevel) {
             return response()->json([
                 'message' => 'Grade level not found',
             ], 404);
@@ -66,12 +66,12 @@ class GradeLevelController extends Controller
         ]);
 
         $gradeLevel->update($request->only([
-            'name'
+            'name',
         ]));
 
         return response()->json([
             'message' => 'Grade level updated successfully',
-            'data' => $gradeLevel
+            'data' => $gradeLevel,
         ]);
     }
 

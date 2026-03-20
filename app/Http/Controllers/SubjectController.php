@@ -2,18 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Subject;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class SubjectController extends Controller
 {
     public function index()
-    {   
+    {
         $subjects = Subject::with('gradeLevel')->get();
 
         return response()->json([
-            'subjects' => $subjects
+            'subjects' => $subjects,
         ]);
     }
 
@@ -33,7 +33,7 @@ class SubjectController extends Controller
 
         return response()->json([
             'message' => 'Subject created successfully',
-            'data' => $subject
+            'data' => $subject,
         ], 201);
     }
 
@@ -41,7 +41,7 @@ class SubjectController extends Controller
     {
         $subject = Subject::findOrFail($id);
 
-        if (!$subject) {
+        if (! $subject) {
             return response()->json([
                 'message' => 'Subject not found!',
             ], 404);
@@ -54,9 +54,9 @@ class SubjectController extends Controller
     {
         $subject = Subject::findOrFail($id);
 
-        if (!$subject) {
+        if (! $subject) {
             return response()->json([
-                'message' => 'Subject not found'
+                'message' => 'Subject not found',
             ], 404);
         }
 
@@ -69,15 +69,15 @@ class SubjectController extends Controller
 
         return response()->json([
             'message' => 'Subject updated successfully',
-            'data' => $subject
+            'data' => $subject,
         ]);
     }
-    
+
     public function destroy($id)
     {
         $subject = Subject::findOrFail($id);
 
-        if (!$subject) {
+        if (! $subject) {
             return response()->json([
                 'message' => 'Subject not found',
             ], 404);
