@@ -40,7 +40,7 @@ class EnrollmentController extends Controller
             'section_id' => 'required|exists:sections,id',
         ]);
 
-                $enrollment = Enrollment::create($validated);
+        $enrollment = Enrollment::create($validated);
 
         return response()->json([
             'message' => 'Enrollment created successfully.',
