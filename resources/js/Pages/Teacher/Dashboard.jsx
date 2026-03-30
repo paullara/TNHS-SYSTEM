@@ -8,6 +8,7 @@ export default function Dashboard({ teacherSubjects }) {
     const [students, setStudents] = useState([]);
     const [selectedSubject, setSelectedSubject] = useState(null);
     const [selectedSubjectId, setSelectedSubjectId] = useState(null);
+    const [selectedSemester, setSelectedSemester] = useState(null);
     const [loading, setLoading] = useState(false);
 
     // ✅ per-student form state
@@ -36,14 +37,29 @@ export default function Dashboard({ teacherSubjects }) {
         setLoading(true);
 
         try {
-            await axios.post("/grades", {
+            const payload = {
                 enrollment_id: enrollmentId,
-                subject_id: selectedSubjectId, // ✅ FIXED
-                q1: clean(formData[enrollmentId]?.q1),
-                q2: clean(formData[enrollmentId]?.q2),
-                q3: clean(formData[enrollmentId]?.q3),
-                q4: clean(formData[enrollmentId]?.q4),
-            });
+                subject_id: selectedSubjectId,
+            };
+
+            if (showQ1Q2) {
+                payload.q1 = clean(formData[enrollmentId]?.q1);
+                payload.q2 = clean(formData[enrollmentId]?.q2);
+                payload.q3 = null;
+                payload.q4 = null;
+            } else if (showQ3Q4) {
+                payload.q1 = null;
+                payload.q2 = null;
+                payload.q3 = clean(formData[enrollmentId]?.q3);
+                payload.q4 = clean(formData[enrollmentId]?.q4);
+            } else {
+                payload.q1 = clean(formData[enrollmentId]?.q1);
+                payload.q2 = clean(formData[enrollmentId]?.q2);
+                payload.q3 = clean(formData[enrollmentId]?.q3);
+                payload.q4 = clean(formData[enrollmentId]?.q4);
+            }
+
+            await axios.post("/grades", payload);
 
             alert("Student graded successfully ✅");
 
@@ -76,7 +92,7 @@ export default function Dashboard({ teacherSubjects }) {
     };
 
     // ✅ fetch students
-    const fetchStudents = async (subjectId, subjectName) => {
+    const fetchStudents = async (subjectId, subjectName, subjectSemester) => {
         try {
             setLoading(true);
 
@@ -87,6 +103,7 @@ export default function Dashboard({ teacherSubjects }) {
             setStudents(res.data);
             setSelectedSubject(subjectName);
             setSelectedSubjectId(subjectId); // ✅ VERY IMPORTANT
+            setSelectedSemester(subjectSemester);
 
             // initialize form per student
             const initialForm = {};
@@ -106,6 +123,10 @@ export default function Dashboard({ teacherSubjects }) {
             setLoading(false);
         }
     };
+
+    const showQ1Q2 = String(selectedSemester || "").toUpperCase() === "1ST";
+    const showQ3Q4 = String(selectedSemester || "").toUpperCase() === "2ND";
+    const showAllQuarters = !selectedSemester;
 
     return (
         <TeacherLayout
@@ -137,7 +158,8 @@ export default function Dashboard({ teacherSubjects }) {
                                         <b>{item.subject?.name}</b>
                                     </p>
                                     <p className="text-sm text-gray-500">
-                                        {item.school_year?.label}
+                                        {item.school_year?.label} • Semester:{" "}
+                                        {item.subject?.semester}
                                     </p>
                                 </div>
 
@@ -146,6 +168,7 @@ export default function Dashboard({ teacherSubjects }) {
                                         fetchStudents(
                                             item.subject_id,
                                             item.subject?.name,
+                                            item.subject?.semester,
                                         )
                                     }
                                     className="bg-blue-500 text-white px-4 py-2 rounded"
@@ -184,73 +207,109 @@ export default function Dashboard({ teacherSubjects }) {
                                     }
                                     className="grid grid-cols-2 md:grid-cols-5 gap-3"
                                 >
-                                    {/* Q1 */}
-                                    <input
-                                        type="number"
-                                        name="q1"
-                                        placeholder="Q1"
-                                        value={
-                                            formData[enrollment.id]?.q1 || ""
-                                        }
-                                        onChange={(e) =>
-                                            handleChange(enrollment.id, e)
-                                        }
-                                        className="border p-2 rounded"
-                                    />
-                                    <InputError
-                                        message={errors[enrollment.id]?.q1?.[0]}
-                                    />
+                                    {(showQ1Q2 || showAllQuarters) && (
+                                        <>
+                                            {/* Q1 */}
+                                            <input
+                                                type="number"
+                                                name="q1"
+                                                placeholder="Q1"
+                                                value={
+                                                    formData[enrollment.id]
+                                                        ?.q1 || ""
+                                                }
+                                                onChange={(e) =>
+                                                    handleChange(
+                                                        enrollment.id,
+                                                        e,
+                                                    )
+                                                }
+                                                className="border p-2 rounded"
+                                            />
+                                            <InputError
+                                                message={
+                                                    errors[enrollment.id]
+                                                        ?.q1?.[0]
+                                                }
+                                            />
 
-                                    {/* Q2 */}
-                                    <input
-                                        type="number"
-                                        name="q2"
-                                        placeholder="Q2"
-                                        value={
-                                            formData[enrollment.id]?.q2 || ""
-                                        }
-                                        onChange={(e) =>
-                                            handleChange(enrollment.id, e)
-                                        }
-                                        className="border p-2 rounded"
-                                    />
-                                    <InputError
-                                        message={errors[enrollment.id]?.q2?.[0]}
-                                    />
+                                            {/* Q2 */}
+                                            <input
+                                                type="number"
+                                                name="q2"
+                                                placeholder="Q2"
+                                                value={
+                                                    formData[enrollment.id]
+                                                        ?.q2 || ""
+                                                }
+                                                onChange={(e) =>
+                                                    handleChange(
+                                                        enrollment.id,
+                                                        e,
+                                                    )
+                                                }
+                                                className="border p-2 rounded"
+                                            />
+                                            <InputError
+                                                message={
+                                                    errors[enrollment.id]
+                                                        ?.q2?.[0]
+                                                }
+                                            />
+                                        </>
+                                    )}
 
-                                    {/* Q3 */}
-                                    <input
-                                        type="number"
-                                        name="q3"
-                                        placeholder="Q3"
-                                        value={
-                                            formData[enrollment.id]?.q3 || ""
-                                        }
-                                        onChange={(e) =>
-                                            handleChange(enrollment.id, e)
-                                        }
-                                        className="border p-2 rounded"
-                                    />
-                                    <InputError
-                                        message={errors[enrollment.id]?.q3?.[0]}
-                                    />
+                                    {(showQ3Q4 || showAllQuarters) && (
+                                        <>
+                                            {/* Q3 */}
+                                            <input
+                                                type="number"
+                                                name="q3"
+                                                placeholder="Q3"
+                                                value={
+                                                    formData[enrollment.id]
+                                                        ?.q3 || ""
+                                                }
+                                                onChange={(e) =>
+                                                    handleChange(
+                                                        enrollment.id,
+                                                        e,
+                                                    )
+                                                }
+                                                className="border p-2 rounded"
+                                            />
+                                            <InputError
+                                                message={
+                                                    errors[enrollment.id]
+                                                        ?.q3?.[0]
+                                                }
+                                            />
 
-                                    {/* Q4 */}
-                                    <input
-                                        type="number"
-                                        name="q4"
-                                        placeholder="Q4"
-                                        value={
-                                            formData[enrollment.id]?.q4 || ""
-                                        }
-                                        onChange={(e) =>
-                                            handleChange(enrollment.id, e)
-                                        }
-                                        className="border p-2 rounded"
-                                    />
-                                    <InputError
-                                        message={errors[enrollment.id]?.q4?.[0]}
-                                    />
+                                            {/* Q4 */}
+                                            <input
+                                                type="number"
+                                                name="q4"
+                                                placeholder="Q4"
+                                                value={
+                                                    formData[enrollment.id]
+                                                        ?.q4 || ""
+                                                }
+                                                onChange={(e) =>
+                                                    handleChange(
+                                                        enrollment.id,
+                                                        e,
+                                                    )
+                                                }
+                                                className="border p-2 rounded"
+                                            />
+                                            <InputError
+                                                message={
+                                                    errors[enrollment.id]
+                                                        ?.q4?.[0]
+                                                }
+                                            />
+                                        </>
+                                    )}
 
                                     {/* BUTTON */}
                                     <button
