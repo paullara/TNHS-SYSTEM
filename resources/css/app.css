@@ -1,3 +1,67 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@page {
+    size: A4 portrait;
+    margin: 12mm;
+}
+
+@media print {
+    .no-print {
+        display: none !important;
+    }
+
+    /* Print only the marked section */
+    body * {
+        visibility: hidden;
+    }
+
+    .printable,
+    .printable * {
+        visibility: visible;
+    }
+
+    .printable {
+        position: relative;
+        top: 0;
+        left: 0;
+        width: 280mm;
+        max-width: 280mm;
+        min-height: 297mm;
+        margin: 0 auto;
+        padding: 0;
+        box-sizing: border-box;
+        overflow: hidden;
+        font-size: 11px;
+    }
+
+    .printable > div {
+        page-break-after: always;
+        page-break-inside: avoid;
+    }
+
+    table {
+        page-break-inside: avoid;
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    tr,
+    td,
+    th {
+        page-break-inside: avoid;
+        page-break-after: auto;
+    }
+
+    /* Hide everything else that could leak into the printed result */
+    .no-print {
+        display: none !important;
+    }
+
+    body,
+    .printable {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+}
