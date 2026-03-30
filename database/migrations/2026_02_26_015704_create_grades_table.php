@@ -16,11 +16,10 @@ return new class extends Migration
             $table->foreignId('enrollment_id')->constrained('enrollments')->onDelete('cascade');
             $table->foreignId('subject_id')->constrained('subjects')->onDelete('cascade');
             $table->foreignId('teacher_id')->constrained('users')->onDelete('cascade');
-            $table->integer('quarter1');
-            $table->integer('quarter2');
-            $table->integer('quarter3');
-            $table->integer('quarter4');
-            $table->decimal('final_grade', 8, 2);
+            $table->integer('q1')->nullable();
+            $table->integer('q2')->nullable();
+            $table->integer('q3')->nullable();
+            $table->integer('q4')->nullable();
             $table->timestamps();
         });
     }

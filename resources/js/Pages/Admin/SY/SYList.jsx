@@ -194,17 +194,30 @@ export default function SYList() {
                                             {sy.end_date}
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
-                                            <span
-                                                className={`px-2 py-1 rounded text-white ${
-                                                    sy.is_active
-                                                        ? "bg-green-500"
-                                                        : "bg-red-500"
-                                                }`}
-                                            >
-                                                {sy.is_active
-                                                    ? "Active"
-                                                    : "Inactive"}
-                                            </span>
+                                            {(() => {
+                                                const today = new Date();
+                                                const start = sy.start_date ? new Date(sy.start_date) : null;
+                                                const end = sy.end_date ? new Date(sy.end_date) : null;
+
+                                                let status = "Inactive";
+                                                let bgColor = "bg-red-500";
+
+                                                if (!start || start > today) {
+                                                    status = "Upcoming";
+                                                    bgColor = "bg-blue-500";
+                                                } else if (start && end && today >= start && today <= end) {
+                                                    status = "Active";
+                                                    bgColor = "bg-green-500";
+                                                }
+
+                                                return (
+                                                    <span
+                                                        className={`px-2 py-1 rounded text-white ${bgColor}`}
+                                                    >
+                                                        {status}
+                                                    </span>
+                                                );
+                                            })()}
                                         </td>
                                         <td className="px-6 py-4 space-x-2">
                                             <button

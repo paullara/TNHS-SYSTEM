@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Grade;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class GradeController extends Controller
 {
@@ -30,16 +31,18 @@ class GradeController extends Controller
      */
     public function store(Request $request)
     {
+        $authenticatedTeacher = Auth::user();
+
         $validated = $request->validate([
             'enrollment_id' => 'required|exists:enrollments,id',
             'subject_id' => 'required|exists:subjects,id',
-            'teacher_id' => 'required|exists:users,id',
-            'quarter1' => 'required|integer|min:0|max:100',
-            'quarter2' => 'required|integer|min:0|max:100',
-            'quarter3' => 'required|integer|min:0|max:100',
-            'quarter4' => 'required|integer|min:0|max:100',
-            'final_grade' => 'required|integer|min:0|max:100',
+            'q1' => 'nullable|integer|min:0|max:100',
+            'q2' => 'nullable|integer|min:0|max:100',
+            'q3' => 'nullable|integer|min:0|max:100',
+            'q4' => 'nullable|integer|min:0|max:100',
         ]);
+
+        $validated['teacher_id'] = $authenticatedTeacher->id;
 
         $grade = Grade::create($validated);
 
@@ -90,11 +93,10 @@ class GradeController extends Controller
             'enrollment_id' => 'sometimes|exists|enrollments,id',
             'subject_id' => 'sometimes|exists|subjects,id',
             'teacher_id' => 'sometimes|exists|users,id',
-            'quarter1' => 'sometimes|integer|max:20',
-            'quarter2' => 'sometimes|integer|max:20',
-            'quarter3' => 'sometimes|integer|max:20',
-            'quarter4' => 'sometimes|integer|max:20',
-            'final_grade' => 'sometimes|integer|max:20',
+            'first_sem' => 'sometimes|integer|max:20',
+            'second_sem' => 'sometimes|integer|max:20',
+            'semester_final_grade' => 'sometimes|integer|max:20',
+            'general_average' => 'sometimes|integer|max:20',
         ]);
 
         $grade->update($validated);

@@ -10,7 +10,7 @@ class SubjectController extends Controller
 {
     public function index()
     {
-        $subjects = Subject::with('gradeLevel')->get();
+        $subjects = Subject::with(['gradeLevel', 'section'])->get();
 
         return response()->json([
             'subjects' => $subjects,
@@ -26,7 +26,9 @@ class SubjectController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:50',
+            'semester' => 'required',
             'grade_level_id' => 'required|exists:grade_levels,id',
+            'section_id' => 'required|exists:sections,id',
         ]);
 
         $subject = Subject::create($validated);
@@ -63,6 +65,8 @@ class SubjectController extends Controller
         $validated = $request->validate([
             'name' => 'sometimes|string|max:50',
             'grade_level_id' => 'sometimes|exists:grade_levels,id',
+            'section_id' => 'sometimes|exists:sections,id',
+            'semester' => 'sometimes',
         ]);
 
         $subject->update($validated);

@@ -27,5 +27,5 @@ Route::apiResource('sections', SectionController::class);
 Route::apiResource('subjects', SubjectController::class);
 Route::apiResource('ts', TeacherSubjectController::class);
 Route::apiResource('enrollments', EnrollmentController::class);
-Route::apiResource('grades', GradeController::class);
+// Route::middleware('auth:sanctum')->apiResource('grades', GradeController::class);
 Route::apiResource('fuck', FuckController::class);

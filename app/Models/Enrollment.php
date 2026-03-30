@@ -11,6 +11,7 @@ class Enrollment extends Model
         'school_year_id',
         'grade_level_id',
         'section_id',
+        'strand',
     ];
 
     public function student()
@@ -35,6 +36,6 @@ class Enrollment extends Model
 
     public function grade()
     {
-        return $this->hasMany(Grade::class);
+        return $this->hasOne(Grade::class);
     }
 }

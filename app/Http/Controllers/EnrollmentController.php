@@ -38,6 +38,7 @@ class EnrollmentController extends Controller
             'school_year_id' => 'required|exists:school_years,id',
             'grade_level_id' => 'required|exists:grade_levels,id',
             'section_id' => 'required|exists:sections,id',
+            'strand' => 'required',
         ]);
 
         $enrollment = Enrollment::create($validated);
@@ -90,6 +91,7 @@ class EnrollmentController extends Controller
             'school_year_id' => 'sometimes|exists|school_years,id',
             'grade_level_id' => 'sometimes|exists|grade_levels,id',
             'section_id' => 'sometimes|exists|sections,id',
+            'strand' => 'sometimes',
         ]);
 
         $enrollment->update($validated);

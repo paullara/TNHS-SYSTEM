@@ -86,6 +86,12 @@ export default function AdminLayout({ header, children }) {
                                 >
                                     Enrollment
                                 </NavLink>
+                                <NavLink
+                                    href={route("grade")}
+                                    active={route().current("grade")}
+                                >
+                                    Grade
+                                </NavLink>
                             </div>
                         </div>
 

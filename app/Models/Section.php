@@ -17,6 +17,11 @@ class Section extends Model
         return $this->belongsTo(GradeLevel::class);
     }
 
+    public function subjects()
+    {
+        return $this->hasMany(Subject::class);
+    }
+
     public function adviser()
     {
         return $this->belongsTo(User::class, 'adviser_id');

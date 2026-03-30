@@ -4,6 +4,7 @@ import InputError from "@/Components/InputError";
 import axios from "axios";
 
 export default function SubjectPage() {
+    const [sections, setSections] = useState([]);
     const [subjects, setSubjects] = useState([]);
     const [editingId, setEditingId] = useState(null);
     const [loading, setLoading] = useState(false);
@@ -11,7 +12,9 @@ export default function SubjectPage() {
     const [gradeLevels, setGradeLevels] = useState([]);
     const [formData, setFormData] = useState({
         name: "",
+        semester: "",
         grade_level_id: "",
+        section_id: "",
     });
 
     const handleChange = (e) => {
@@ -41,9 +44,19 @@ export default function SubjectPage() {
         }
     };
 
+    const fetchSections = async () => {
+        try {
+            const res = await axios.get("/api/sections");
+            setSections(res.data.sections);
+        } catch (err) {
+            console.error("Failed to retrieve sections", err);
+        }
+    };
+
     useEffect(() => {
         fetchSubjects();
         fetchGradeLevels();
+        fetchSections();
     }, []);
 
     const handleSubmit = async (e) => {
@@ -61,7 +74,9 @@ export default function SubjectPage() {
 
             setFormData({
                 name: "",
+                semester: "",
                 grade_level_id: "",
+                section_id: "",
             });
             setEditingId(null);
             fetchSubjects();
@@ -77,7 +92,9 @@ export default function SubjectPage() {
 
         setFormData({
             name: subject.name,
+            semester: subject.semester,
             grade_level_id: subject.grade_level_id,
+            section_id: subject.section_id,
         });
     };
 
@@ -116,6 +133,21 @@ export default function SubjectPage() {
                             />
                             <InputError message={errors.name} />
                         </div>
+
+                        <div>
+                            <label>Semester</label>
+
+                            <select
+                                name="semester"
+                                value={formData.semester}
+                                onChange={handleChange}
+                                className="w-full border rounded-md px-3 py-2 focus:ring:2 focus:ring-blue-500"
+                            >
+                                <option value="">Select Semester</option>
+                                <option value="1ST">1st Semester</option>
+                                <option value="2ND">2nd Semester</option>
+                            </select>
+                        </div>
                         <div>
                             <label className="text-xs text-gray-600">
                                 Grade Level
@@ -133,6 +165,25 @@ export default function SubjectPage() {
                                         value={gradeLevel.id}
                                     >
                                         {gradeLevel.name}
+                                    </option>
+                                ))}
+                            </select>
+                            <InputError message={errors.name} />
+                        </div>
+                        <div>
+                            <label className="text-xs text-gray-600">
+                                Section
+                            </label>
+                            <select
+                                name="section_id"
+                                value={formData.section_id}
+                                onChange={handleChange}
+                                className="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500"
+                            >
+                                <option value="">Select Section</option>
+                                {sections.map((section) => (
+                                    <option key={section.id} value={section.id}>
+                                        {section.name}
                                     </option>
                                 ))}
                             </select>
@@ -161,6 +212,7 @@ export default function SubjectPage() {
                             <tr>
                                 <th>Subject</th>
                                 <th>Grade Level</th>
+                                <th>Section</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -169,6 +221,7 @@ export default function SubjectPage() {
                                 <tr key={subject.id}>
                                     <td>{subject.name}</td>
                                     <td>{subject.grade_level.name}</td>
+                                    <td>{subject.section.name}</td>
                                     <td>
                                         <button
                                             onClick={() => handleEdit(subject)}

@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\EnrollmentController;
 use App\Http\Controllers\GradeLevelController;
+use App\Http\Controllers\GradeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SchoolYearController;
 use App\Http\Controllers\SectionController;
@@ -50,11 +51,15 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/subjects', [SubjectController::class, 'subjectPage'])->name('subject.page');
     Route::get('/teacher-subjects', [TeacherSubjectController::class, 'assignTeacherToSubject'])->name('assign-subject');
     Route::get('/enrollments,', [EnrollmentController::class, 'create'])->name('enrollment.create');
+    Route::get('/all-student-grades', [AdminController::class, 'allStudentGrades']);
+    Route::get('/student-grade', [AdminController::class, 'gradePage'])->name('grade');
 });
 
 // Teacher
 Route::middleware('auth')->group(function () {
+    Route::resource('/grades', GradeController::class);
     Route::get('/teacher/dashboard', [TeacherController::class, 'dashboard'])->name('teacher.dashboard');
+    Route::get('/teacher/subjects/{subject}/students', [TeacherController::class, 'getStudentsBySubject']);
 });
 
 require __DIR__.'/auth.php';

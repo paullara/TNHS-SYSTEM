@@ -10,11 +10,14 @@ class Grade extends Model
         'enrollment_id',
         'subject_id',
         'teacher_id',
-        'quarter1',
-        'quarter2',
-        'quarter3',
-        'quarter4',
-        'final_grade',
+        'q1',
+        'q2',
+        'q3',
+        'q4',
+        'first_sem',
+        'second_sem',
+        'semester_final_grade',
+        'general_average',
     ];
 
     public function enrollment()

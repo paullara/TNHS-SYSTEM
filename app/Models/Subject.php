@@ -9,11 +9,18 @@ class Subject extends Model
     protected $fillable = [
         'name',
         'grade_level_id',
+        'section_id',
+        'semester',
     ];
 
     public function gradeLevel()
     {
         return $this->belongsTo(GradeLevel::class);
+    }
+
+    public function section()
+    {
+        return $this->belongsTo(Section::class);
     }
 
     public function grades()
