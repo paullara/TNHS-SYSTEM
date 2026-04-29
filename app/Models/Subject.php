@@ -11,6 +11,7 @@ class Subject extends Model
         'grade_level_id',
         'section_id',
         'semester',
+        'subject_indicate',
     ];
 
     public function gradeLevel()

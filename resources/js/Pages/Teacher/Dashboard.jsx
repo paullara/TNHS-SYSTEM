@@ -1,5 +1,5 @@
 import TeacherLayout from "@/Layouts/TeacherLayout";
-import { useState } from "react";
+import { useState, useMemo, useCallback, memo, useEffect } from "react";
 import { Head } from "@inertiajs/react";
 import InputError from "@/Components/InputError";
 import axios from "axios";
@@ -11,88 +11,25 @@ export default function Dashboard({ teacherSubjects }) {
     const [selectedSemester, setSelectedSemester] = useState(null);
     const [loading, setLoading] = useState(false);
 
-    // ✅ per-student form state
     const [formData, setFormData] = useState({});
     const [errors, setErrors] = useState({});
+    const [editable, setEditable] = useState({});
 
-    // ✅ clean value (important for nullable integers)
     const clean = (val) => (val === "" ? null : Number(val));
 
-    // ✅ handle input per student
-    const handleChange = (enrollmentId, e) => {
+    const handleChange = useCallback((id, e) => {
         const { name, value } = e.target;
 
         setFormData((prev) => ({
             ...prev,
-            [enrollmentId]: {
-                ...prev[enrollmentId],
+            [id]: {
+                ...prev[id],
                 [name]: value,
             },
         }));
-    };
+    }, []);
 
-    // ✅ submit per student
-    const handleSubmit = async (e, enrollmentId) => {
-        e.preventDefault();
-        setLoading(true);
-
-        try {
-            const payload = {
-                enrollment_id: enrollmentId,
-                subject_id: selectedSubjectId,
-            };
-
-            if (showQ1Q2) {
-                payload.q1 = clean(formData[enrollmentId]?.q1);
-                payload.q2 = clean(formData[enrollmentId]?.q2);
-                payload.q3 = null;
-                payload.q4 = null;
-            } else if (showQ3Q4) {
-                payload.q1 = null;
-                payload.q2 = null;
-                payload.q3 = clean(formData[enrollmentId]?.q3);
-                payload.q4 = clean(formData[enrollmentId]?.q4);
-            } else {
-                payload.q1 = clean(formData[enrollmentId]?.q1);
-                payload.q2 = clean(formData[enrollmentId]?.q2);
-                payload.q3 = clean(formData[enrollmentId]?.q3);
-                payload.q4 = clean(formData[enrollmentId]?.q4);
-            }
-
-            await axios.post("/grades", payload);
-
-            alert("Student graded successfully ✅");
-
-            // reset only this student
-            setFormData((prev) => ({
-                ...prev,
-                [enrollmentId]: {
-                    q1: "",
-                    q2: "",
-                    q3: "",
-                    q4: "",
-                },
-            }));
-
-            setErrors({});
-        } catch (err) {
-            if (err.response?.status === 422) {
-                console.log("VALIDATION ERRORS:", err.response.data);
-
-                setErrors((prev) => ({
-                    ...prev,
-                    [enrollmentId]: err.response.data.errors,
-                }));
-            } else {
-                console.error(err);
-            }
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    // ✅ fetch students
-    const fetchStudents = async (subjectId, subjectName, subjectSemester) => {
+    const fetchStudents = async (subjectId, subjectName, semester) => {
         try {
             setLoading(true);
 
@@ -102,38 +39,227 @@ export default function Dashboard({ teacherSubjects }) {
 
             setStudents(res.data);
             setSelectedSubject(subjectName);
-            setSelectedSubjectId(subjectId); // ✅ VERY IMPORTANT
-            setSelectedSemester(subjectSemester);
+            setSelectedSubjectId(subjectId);
+            setSelectedSemester(semester);
 
-            // initialize form per student
-            const initialForm = {};
-            res.data.forEach((enrollment) => {
-                initialForm[enrollment.id] = {
-                    q1: "",
-                    q2: "",
-                    q3: "",
-                    q4: "",
+            const initial = {};
+            res.data.forEach((s) => {
+                initial[s.id] = {
+                    q1: s.grade?.q1 || "",
+                    q2: s.grade?.q2 || "",
+                    q3: s.grade?.q3 || "",
+                    q4: s.grade?.q4 || "",
+                    remedial: s.grade?.remedial || "",
                 };
             });
 
-            setFormData(initialForm);
-        } catch (error) {
-            console.error(error);
+            setFormData(initial);
+        } catch (e) {
+            console.error(e);
         } finally {
             setLoading(false);
         }
     };
 
-    const showQ1Q2 = String(selectedSemester || "").toUpperCase() === "1ST";
-    const showQ3Q4 = String(selectedSemester || "").toUpperCase() === "2ND";
-    const showAllQuarters = !selectedSemester;
+    // ✅ FIXED GROUPS
+    const noGradeStudents = useMemo(
+        () => students.filter((s) => !s.grade),
+        [students],
+    );
+    const passedStudents = useMemo(
+        () => students.filter((s) => s.grade?.status === "PASSED"),
+        [students],
+    );
+    const failedStudents = useMemo(
+        () => students.filter((s) => s.grade?.status === "FAILED"),
+        [students],
+    );
+
+    const StudentCard = memo(
+        ({
+            enrollment,
+            selectedSubjectId,
+            selectedSemester,
+            selectedSubject,
+            fetchStudents,
+            setEditable,
+            setErrors,
+        }) => {
+            const [localData, setLocalData] = useState(
+                formData[enrollment.id] || {},
+            );
+
+            useEffect(() => {
+                setLocalData(formData[enrollment.id] || {});
+            }, [formData[enrollment.id]]);
+
+            const handleLocalChange = useCallback((e) => {
+                const { name, value } = e.target;
+                setLocalData((prev) => ({
+                    ...prev,
+                    [name]: value,
+                }));
+            }, []);
+
+            const handleBlur = useCallback(() => {
+                setFormData((prev) => ({
+                    ...prev,
+                    [enrollment.id]: localData,
+                }));
+            }, [enrollment.id, localData]);
+
+            const handleSubmit = async (e) => {
+                e.preventDefault();
+
+                try {
+                    const payload = {
+                        enrollment_id: enrollment.id,
+                        subject_id: selectedSubjectId,
+                        q1: clean(localData.q1),
+                        q2: clean(localData.q2),
+                        q3: clean(localData.q3),
+                        q4: clean(localData.q4),
+                        remedial: clean(localData.remedial),
+                    };
+
+                    await axios.post("/grades", payload);
+
+                    alert("Saved ✅");
+
+                    // 🔥 REFETCH STUDENTS (AUTO UPDATE UI)
+                    fetchStudents(
+                        selectedSubjectId,
+                        selectedSubject,
+                        selectedSemester,
+                    );
+
+                    setEditable((prev) => ({
+                        ...prev,
+                        [enrollment.id]: false,
+                    }));
+                } catch (err) {
+                    if (err.response?.status === 422) {
+                        setErrors((prev) => ({
+                            ...prev,
+                            [enrollment.id]: err.response.data.errors,
+                        }));
+                    }
+                }
+            };
+
+            const isLocked =
+                enrollment.grade?.is_finalized && !editable[enrollment.id];
+
+            return (
+                <div className="border rounded-xl p-4 bg-white shadow-sm space-y-3">
+                    {/* HEADER */}
+                    <div className="flex justify-between items-center">
+                        <p className="font-semibold text-gray-800">
+                            {enrollment.student?.firstname}{" "}
+                            {enrollment.student?.lastname}
+                        </p>
+
+                        <span
+                            className={`text-xs px-2 py-1 rounded text-white ${
+                                enrollment.grade?.status === "PASSED"
+                                    ? "bg-green-500"
+                                    : enrollment.grade?.status === "FAILED"
+                                      ? "bg-red-500"
+                                      : "bg-gray-400"
+                            }`}
+                        >
+                            {enrollment.grade?.status || "NO GRADE"}
+                        </span>
+                    </div>
+
+                    {/* 📘 1ST SEM */}
+                    {selectedSemester === "1ST" && (
+                        <div>
+                            <h4 className="text-blue-600 text-sm font-bold mb-2">
+                                1st Semester
+                            </h4>
+
+                            <div className="grid grid-cols-2 gap-2">
+                                {["q1", "q2"].map((q) => (
+                                    <input
+                                        key={q}
+                                        type="number"
+                                        name={q}
+                                        placeholder={q.toUpperCase()}
+                                        value={localData[q] || ""}
+                                        onChange={handleLocalChange}
+                                        onBlur={handleBlur}
+                                        disabled={isLocked}
+                                        className="border p-2 rounded"
+                                    />
+                                ))}
+                            </div>
+                        </div>
+                    )}
+
+                    {/* 📗 2ND SEM */}
+                    {selectedSemester === "2ND" && (
+                        <div>
+                            <h4 className="text-green-600 text-sm font-bold mb-2">
+                                2nd Semester
+                            </h4>
+
+                            <div className="grid grid-cols-2 gap-2">
+                                {["q3", "q4"].map((q) => (
+                                    <input
+                                        key={q}
+                                        type="number"
+                                        name={q}
+                                        placeholder={q.toUpperCase()}
+                                        value={localData[q] || ""}
+                                        onChange={handleLocalChange}
+                                        onBlur={handleBlur}
+                                        disabled={isLocked}
+                                        className="border p-2 rounded"
+                                    />
+                                ))}
+                            </div>
+                        </div>
+                    )}
+
+                    {/* REMEDIAL */}
+                    {enrollment.grade?.status === "FAILED" && (
+                        <input
+                            type="number"
+                            name="remedial"
+                            placeholder="Remedial"
+                            value={localData.remedial || ""}
+                            onChange={handleLocalChange}
+                            onBlur={handleBlur}
+                            disabled={isLocked}
+                            className="border p-2 rounded bg-yellow-50"
+                        />
+                    )}
+
+                    {/* SAVE */}
+                    <button
+                        onClick={handleSubmit}
+                        disabled={isLocked}
+                        className="w-full bg-green-500 text-white rounded px-3 py-2"
+                    >
+                        Save
+                    </button>
+
+                    {/* FINAL */}
+                    {enrollment.grade && (
+                        <div className="text-sm text-gray-600">
+                            Final Grade: <b>{enrollment.grade.final_grade}</b>
+                        </div>
+                    )}
+                </div>
+            );
+        },
+    );
 
     return (
         <TeacherLayout
             header={
-                <h2 className="text-xl font-semibold text-gray-800">
-                    Teacher Dashboard
-                </h2>
+                <h2 className="text-xl font-semibold">Teacher Dashboard</h2>
             }
         >
             <Head title="Dashboard" />
@@ -141,185 +267,108 @@ export default function Dashboard({ teacherSubjects }) {
             <div className="py-10 max-w-7xl mx-auto space-y-6">
                 {/* SUBJECTS */}
                 <div className="bg-white p-6 rounded-xl shadow">
-                    <h3 className="text-lg font-semibold mb-4">
-                        Assigned Subjects
+                    <h3 className="font-semibold mb-4">Assigned Subjects</h3>
+
+                    {teacherSubjects.map((item) => (
+                        <div
+                            key={item.id}
+                            className="border p-4 rounded mb-3 flex justify-between"
+                        >
+                            <div>
+                                <p className="font-semibold">
+                                    {item.subject?.name}
+                                </p>
+                                <p className="text-sm text-gray-500">
+                                    {item.school_year?.label}
+                                </p>
+                            </div>
+
+                            <button
+                                onClick={() =>
+                                    fetchStudents(
+                                        item.subject_id,
+                                        item.subject?.name,
+                                        item.subject?.semester,
+                                    )
+                                }
+                                className="bg-blue-500 text-white px-4 py-2 rounded"
+                            >
+                                View Students
+                            </button>
+                        </div>
+                    ))}
+                </div>
+
+                {/* STUDENTS */}
+
+                {/* 🟡 NO GRADE */}
+                <div className="bg-white p-6 rounded-xl shadow">
+                    <h3 className="text-yellow-600 font-bold mb-4">
+                        No Grade Yet ({noGradeStudents.length})
                     </h3>
 
-                    {teacherSubjects.length === 0 ? (
-                        <p>No subjects assigned.</p>
+                    {noGradeStudents.length === 0 ? (
+                        <p className="text-gray-500">All students graded</p>
                     ) : (
-                        teacherSubjects.map((item) => (
-                            <div
-                                key={item.id}
-                                className="border p-4 rounded-lg mb-3 flex justify-between"
-                            >
-                                <div>
-                                    <p>
-                                        <b>{item.subject?.name}</b>
-                                    </p>
-                                    <p className="text-sm text-gray-500">
-                                        {item.school_year?.label} • Semester:{" "}
-                                        {item.subject?.semester}
-                                    </p>
-                                </div>
-
-                                <button
-                                    onClick={() =>
-                                        fetchStudents(
-                                            item.subject_id,
-                                            item.subject?.name,
-                                            item.subject?.semester,
-                                        )
-                                    }
-                                    className="bg-blue-500 text-white px-4 py-2 rounded"
-                                >
-                                    View Students
-                                </button>
-                            </div>
+                        noGradeStudents.map((s) => (
+                            <StudentCard
+                                key={s.id}
+                                enrollment={s}
+                                selectedSubjectId={selectedSubjectId}
+                                selectedSemester={selectedSemester}
+                                selectedSubject={selectedSubject}
+                                fetchStudents={fetchStudents}
+                                setEditable={setEditable}
+                                setErrors={setErrors}
+                            />
                         ))
                     )}
                 </div>
 
-                {/* STUDENTS */}
+                {/* 🟢 PASSED */}
                 <div className="bg-white p-6 rounded-xl shadow">
-                    <h3 className="text-lg font-semibold mb-4">
-                        Students {selectedSubject && `- ${selectedSubject}`}
+                    <h3 className="text-green-600 font-bold mb-4">
+                        Passed ({passedStudents.length})
                     </h3>
 
-                    {loading ? (
-                        <p>Loading...</p>
-                    ) : students.length === 0 ? (
-                        <p>No students.</p>
+                    {passedStudents.length === 0 ? (
+                        <p className="text-gray-500">No passed students</p>
                     ) : (
-                        students.map((enrollment) => (
-                            <div
-                                key={enrollment.id}
-                                className="border p-4 rounded-lg mb-4"
-                            >
-                                <p className="font-semibold mb-2">
-                                    {enrollment.student?.firstname}{" "}
-                                    {enrollment.student?.lastname}
-                                </p>
+                        passedStudents.map((s) => (
+                            <StudentCard
+                                key={s.id}
+                                enrollment={s}
+                                selectedSubjectId={selectedSubjectId}
+                                selectedSemester={selectedSemester}
+                                selectedSubject={selectedSubject}
+                                fetchStudents={fetchStudents}
+                                setEditable={setEditable}
+                                setErrors={setErrors}
+                            />
+                        ))
+                    )}
+                </div>
 
-                                <form
-                                    onSubmit={(e) =>
-                                        handleSubmit(e, enrollment.id)
-                                    }
-                                    className="grid grid-cols-2 md:grid-cols-5 gap-3"
-                                >
-                                    {(showQ1Q2 || showAllQuarters) && (
-                                        <>
-                                            {/* Q1 */}
-                                            <input
-                                                type="number"
-                                                name="q1"
-                                                placeholder="Q1"
-                                                value={
-                                                    formData[enrollment.id]
-                                                        ?.q1 || ""
-                                                }
-                                                onChange={(e) =>
-                                                    handleChange(
-                                                        enrollment.id,
-                                                        e,
-                                                    )
-                                                }
-                                                className="border p-2 rounded"
-                                            />
-                                            <InputError
-                                                message={
-                                                    errors[enrollment.id]
-                                                        ?.q1?.[0]
-                                                }
-                                            />
+                {/* 🔴 FAILED */}
+                <div className="bg-white p-6 rounded-xl shadow">
+                    <h3 className="text-red-600 font-bold mb-4">
+                        Failed ({failedStudents.length})
+                    </h3>
 
-                                            {/* Q2 */}
-                                            <input
-                                                type="number"
-                                                name="q2"
-                                                placeholder="Q2"
-                                                value={
-                                                    formData[enrollment.id]
-                                                        ?.q2 || ""
-                                                }
-                                                onChange={(e) =>
-                                                    handleChange(
-                                                        enrollment.id,
-                                                        e,
-                                                    )
-                                                }
-                                                className="border p-2 rounded"
-                                            />
-                                            <InputError
-                                                message={
-                                                    errors[enrollment.id]
-                                                        ?.q2?.[0]
-                                                }
-                                            />
-                                        </>
-                                    )}
-
-                                    {(showQ3Q4 || showAllQuarters) && (
-                                        <>
-                                            {/* Q3 */}
-                                            <input
-                                                type="number"
-                                                name="q3"
-                                                placeholder="Q3"
-                                                value={
-                                                    formData[enrollment.id]
-                                                        ?.q3 || ""
-                                                }
-                                                onChange={(e) =>
-                                                    handleChange(
-                                                        enrollment.id,
-                                                        e,
-                                                    )
-                                                }
-                                                className="border p-2 rounded"
-                                            />
-                                            <InputError
-                                                message={
-                                                    errors[enrollment.id]
-                                                        ?.q3?.[0]
-                                                }
-                                            />
-
-                                            {/* Q4 */}
-                                            <input
-                                                type="number"
-                                                name="q4"
-                                                placeholder="Q4"
-                                                value={
-                                                    formData[enrollment.id]
-                                                        ?.q4 || ""
-                                                }
-                                                onChange={(e) =>
-                                                    handleChange(
-                                                        enrollment.id,
-                                                        e,
-                                                    )
-                                                }
-                                                className="border p-2 rounded"
-                                            />
-                                            <InputError
-                                                message={
-                                                    errors[enrollment.id]
-                                                        ?.q4?.[0]
-                                                }
-                                            />
-                                        </>
-                                    )}
-
-                                    {/* BUTTON */}
-                                    <button
-                                        type="submit"
-                                        className="bg-green-500 text-white rounded px-4 py-2 col-span-2 md:col-span-1"
-                                    >
-                                        Save
-                                    </button>
-                                </form>
-                            </div>
+                    {failedStudents.length === 0 ? (
+                        <p className="text-gray-500">No failed students</p>
+                    ) : (
+                        failedStudents.map((s) => (
+                            <StudentCard
+                                key={s.id}
+                                enrollment={s}
+                                selectedSubjectId={selectedSubjectId}
+                                selectedSemester={selectedSemester}
+                                selectedSubject={selectedSubject}
+                                fetchStudents={fetchStudents}
+                                setEditable={setEditable}
+                                setErrors={setErrors}
+                            />
                         ))
                     )}
                 </div>

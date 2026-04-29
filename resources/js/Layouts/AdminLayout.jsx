@@ -25,10 +25,10 @@ export default function AdminLayout({ header, children }) {
 
                             <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                                 <NavLink
-                                    href={route("admin.dashboard")}
-                                    active={route().current("admin.dashboard")}
+                                    href={route("understanding")}
+                                    active={route().current("understanding")}
                                 >
-                                    Dashboard
+                                    Understanding
                                 </NavLink>
                                 <NavLink
                                     href={route("teachers.create")}
@@ -43,6 +43,12 @@ export default function AdminLayout({ header, children }) {
                                     Teachers
                                 </NavLink>
                                 <NavLink
+                                    href={route("gradelevel.page")}
+                                    active={route().current("gradelevel.page")}
+                                >
+                                    Grade Level
+                                </NavLink>
+                                <NavLink
                                     href={route("section.list")}
                                     active={route().current("section.list")}
                                 >
@@ -54,12 +60,7 @@ export default function AdminLayout({ header, children }) {
                                 >
                                     School Year
                                 </NavLink>
-                                <NavLink
-                                    href={route("gradelevel.page")}
-                                    active={route().current("gradelevel.page")}
-                                >
-                                    Grade Level
-                                </NavLink>
+
                                 <NavLink
                                     href={route("student.create")}
                                     active={route().current("student.create")}

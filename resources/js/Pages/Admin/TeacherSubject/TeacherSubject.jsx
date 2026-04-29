@@ -206,18 +206,20 @@ export default function TeacherSubject() {
                     <div className="bg-white shadow overflow-hidden sm:rounded-md">
                         <table className="w-full table-auto divide-y divide-gray-200">
                             <thead className="bg-gray-100">
-                                <th className="px-6 py-3 text-left text-xs text-gray-500 uppercase">
-                                    Teacher
-                                </th>
-                                <th className="px-6 py-3 text-left text-xs text-gray-500 uppercase">
-                                    Subject
-                                </th>
-                                <th className="px-6 py-3 text-left text-xs text-gray-500 uppercase">
-                                    School Year
-                                </th>
-                                <th className="px-6 py-3 text-left text-xs text-gray-500 uppercase">
-                                    Action
-                                </th>
+                                <tr>
+                                    <th className="px-6 py-3 text-left text-xs text-gray-500 uppercase">
+                                        Teacher
+                                    </th>
+                                    <th className="px-6 py-3 text-left text-xs text-gray-500 uppercase">
+                                        Subject
+                                    </th>
+                                    <th className="px-6 py-3 text-left text-xs text-gray-500 uppercase">
+                                        School Year
+                                    </th>
+                                    <th className="px-6 py-3 text-left text-xs text-gray-500 uppercase">
+                                        Action
+                                    </th>
+                                </tr>
                             </thead>
                             <tbody className="bg-white">
                                 {teacherSubjects.map((ts) => (

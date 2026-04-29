@@ -12,10 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('grades', function (Blueprint $table) {
-            $table->decimal('first_sem', 5, 2)->nullable();
-            $table->decimal('second_sem', 5, 2)->nullable();
-            $table->decimal('semester_final_grade', 5, 2)->nullable();
-            $table->decimal('general_average', 5, 2)->nullable();
+            $table->string('status')->nullable();
+            $table->integer('remedial')->nullable();
+            $table->decimal('final_grade', 5, 2)->nullable();
+            $table->boolean('is_finalized')->default(false);
         });
     }
 
@@ -25,10 +25,10 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('grades', function (Blueprint $table) {
-            $table->dropColumn('first_sem', 5, 2);
-            $table->dropColumn('second_sem', 5, 2);
-            $table->dropColumn('semester_final_grade', 5, 2);
-            $table->dropColumn('general_average', 5, 2);
+            $table->dropColumn('status');
+            $table->dropColumn('remedial');
+            $table->dropColumm('final_grade');
+            $table->dropColumm('is_finalized');
         });
     }
 };

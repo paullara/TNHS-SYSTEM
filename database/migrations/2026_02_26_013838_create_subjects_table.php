@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('subjects', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->enum('subject_indicate', ['Core', 'Applied', 'Specialized']);
             $table->foreignId('grade_level_id')->constrained('grade_levels')->onDelete('cascade');
             $table->foreignId('section_id')->constrained('sections')->onDelete('cascade');
             $table->timestamps();

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class FuckController extends Controller
 {
@@ -60,5 +61,10 @@ class FuckController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function testLayout()
+    {
+        return Inertia::render('TestPage/TestLayout');
     }
 }

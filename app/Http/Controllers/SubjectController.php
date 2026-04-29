@@ -25,8 +25,9 @@ class SubjectController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:50',
+            'name' => 'required|string|max:250',
             'semester' => 'required',
+            'subject_indicate' => 'required',
             'grade_level_id' => 'required|exists:grade_levels,id',
             'section_id' => 'required|exists:sections,id',
         ]);
@@ -67,6 +68,7 @@ class SubjectController extends Controller
             'grade_level_id' => 'sometimes|exists:grade_levels,id',
             'section_id' => 'sometimes|exists:sections,id',
             'semester' => 'sometimes',
+            'subject_indicate' => 'sometimes',
         ]);
 
         $subject->update($validated);
