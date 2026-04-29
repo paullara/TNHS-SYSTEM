@@ -3,8 +3,8 @@
 @tailwind utilities;
 
 @page {
-    size: A4 portrait;
-    margin: 12mm;
+    size: 8.5in 13in; /* Long coupon */
+    margin: 3mm 7mm; /* top/bottom = 5mm, left/right = 8mm */
 }
 
 @media print {
@@ -23,22 +23,25 @@
     }
 
     .printable {
-        position: relative;
-        top: 0;
-        left: 0;
-        width: 280mm;
-        max-width: 280mm;
-        min-height: 297mm;
-        margin: 0 auto;
-        padding: 0;
-        box-sizing: border-box;
-        overflow: hidden;
-        font-size: 11px;
+        /* Remove absolute positioning to allow proper page flow */
+        position: absolute;
+        top: 10px;
+        /* left: 0; */
+        width: 100%;
+        font-size: 13px;
+        /* background-color: red; */
     }
 
+    /* Allow content to break across pages more naturally */
     .printable > div {
-        page-break-after: always;
-        page-break-inside: avoid;
+        /* page-break-after: avoid; */
+        /* page-break-inside: avoid; */
+        /* page-break-inside: auto; */
+    }
+
+    /* Add page breaks between major sections if needed */
+    .printable > div:not(:last-child) {
+        page-break-after: auto; /* Let browser decide */
     }
 
     table {
@@ -54,7 +57,6 @@
         page-break-after: auto;
     }
 
-    /* Hide everything else that could leak into the printed result */
     .no-print {
         display: none !important;
     }

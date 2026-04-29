@@ -21,14 +21,12 @@ class TeacherController extends Controller
         ]);
     }
 
-    public function getStudentsBySubject($subjectId)
+    public function getStudentsBySubject(Subject $subject)
     {
-        $subject = Subject::findOrFail($subjectId);
-
         $students = Enrollment::with([
             'student',
-            'grade' => function ($q) use ($subjectId) {
-                $q->where('subject_id', $subjectId);
+            'grade' => function ($q) use ($subject) {
+                $q->where('subject_id', $subject->id);
             },
         ])
             ->where('section_id', $subject->section_id)

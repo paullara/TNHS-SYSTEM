@@ -105,6 +105,9 @@ export default function Enrollment() {
             setEditingId(null);
             fetchEnrollments();
         } catch (err) {
+            if (err.response?.data?.errors) {
+                setErrors(err.response.data.errors);
+            }
             console.error("Failed to create enrollment", err);
         } finally {
             setLoading(false);
@@ -206,6 +209,7 @@ export default function Enrollment() {
                                     General Academic Strand
                                 </option>
                             </select>
+                            <InputError message={errors.strand} />
                         </div>
                         <div>
                             <label className="text-sm text-gray-600">
@@ -243,12 +247,13 @@ export default function Enrollment() {
                                     </option>
                                 ))}
                             </select>
+                            <InputError message={errors.section_id} />
                         </div>
                         <div className="flex justify-end pt-2">
                             <button
                                 type="submit"
                                 disabled={loading}
-                                classNaame="bg-blue-600 text-white px-5 py-2 rounded-md text-sm font-medium disabled:opacity-50"
+                                className="bg-blue-600 text-white px-5 py-2 rounded-md text-sm font-medium disabled:opacity-50"
                             >
                                 {loading
                                     ? editingId
@@ -263,7 +268,7 @@ export default function Enrollment() {
                 </div>
                 <div className="h-9/10 w-full">
                     <div className="bg-white shadow overflow-hidden sm:rounded-md">
-                        <table clsssName="w-full table-auto divide-y divide-gray-200">
+                        <table className="w-full table-auto divide-y divide-gray-200">
                             <thead className="bg-gray-100">
                                 <th className="px-6 py-3 text-left text-xs text-gray-500 uppercase">
                                     Student

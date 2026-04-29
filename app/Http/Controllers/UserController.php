@@ -26,6 +26,7 @@ class UserController extends Controller
             'lastname' => 'required|string|max:240',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:6',
+            'role' => 'required|string',
         ]);
 
         $user = User::create([
@@ -34,6 +35,7 @@ class UserController extends Controller
             'middlename' => $request->middlename,
             'lastname' => $request->lastname,
             'email' => $request->email,
+            'role' => $request->role,
             'password' => Hash::make($request->password),
         ]);
 

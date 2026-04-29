@@ -2,8 +2,10 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\EnrollmentController;
-use App\Http\Controllers\GradeLevelController;
+use App\Http\Controllers\FuckController;
 use App\Http\Controllers\GradeController;
+use App\Http\Controllers\GradeLevelController;
+use App\Http\Controllers\LearningController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SchoolYearController;
 use App\Http\Controllers\SectionController;
@@ -18,12 +20,13 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
+    return redirect('/login');
+    // return Inertia::render('Welcome', [
+    //     'canLogin' => Route::has('login'),
+    //     'canRegister' => Route::has('register'),
+    //     'laravelVersion' => Application::VERSION,
+    //     'phpVersion' => PHP_VERSION,
+    // ]);
 });
 
 Route::get('/dashboard', function () {
@@ -53,6 +56,9 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/enrollments,', [EnrollmentController::class, 'create'])->name('enrollment.create');
     Route::get('/all-student-grades', [AdminController::class, 'allStudentGrades']);
     Route::get('/student-grade', [AdminController::class, 'gradePage'])->name('grade');
+    Route::get('/learning', [LearningController::class, 'understanding'])->name('understanding');
+    Route::get('/students-grade', [LearningController::class, 'studentGrades']);
+    Route::get('/fuck/dahsboard', [AdminController::class, 'testLayout'])->name('fuck.page');
 });
 
 // Teacher

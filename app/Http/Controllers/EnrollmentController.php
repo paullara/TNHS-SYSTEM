@@ -87,10 +87,10 @@ class EnrollmentController extends Controller
         }
 
         $validated = $request->validate([
-            'student_id' => 'sometimes|exists|students,id',
-            'school_year_id' => 'sometimes|exists|school_years,id',
-            'grade_level_id' => 'sometimes|exists|grade_levels,id',
-            'section_id' => 'sometimes|exists|sections,id',
+            'student_id' => 'sometimes|exists:students,id',
+            'school_year_id' => 'sometimes|exists:school_years,id',
+            'grade_level_id' => 'sometimes|exists:grade_levels,id',
+            'section_id' => 'sometimes|exists:sections,id',
             'strand' => 'sometimes',
         ]);
 

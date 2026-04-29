@@ -8,6 +8,31 @@ use Illuminate\Support\Facades\Auth;
 
 class GradeController extends Controller
 {
+    private function computeGrade($data)
+    {
+        $quarters = collect([
+            $data['q1'] ?? null,
+            $data['q2'] ?? null,
+            $data['q3'] ?? null,
+            $data['q4'] ?? null,
+        ])->filter();
+
+        $average = $quarters->count() ? $quarters->avg() : 0;
+
+        $final = $average;
+        $status = $average >= 75 ? "PASSED" : "FAILED";
+
+        if (!empty($data['remedial'])) {
+            $final = ($average + $data['remedial']) / 2;
+            $status = $final >= 75 ? 'PASSED' : 'FAILED';
+        }
+
+        return [
+            'final_grade' => round($final, 2),
+            'status' => $status
+        ];
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -40,11 +65,20 @@ class GradeController extends Controller
             'q2' => 'nullable|integer|min:0|max:100',
             'q3' => 'nullable|integer|min:0|max:100',
             'q4' => 'nullable|integer|min:0|max:100',
+            'remedial' => 'nullable|integer|min:0|max:100',
         ]);
 
         $validated['teacher_id'] = $authenticatedTeacher->id;
 
-        $grade = Grade::create($validated);
+        $computed = $this->computeGrade($validated);
+
+        $grade = Grade::updateOrCreate(
+            [
+                'enrollment_id' => $validated['enrollment_id'],
+                'subject_id' => $validated['subject_id'],
+            ],
+            array_merge($validated, $computed)
+        );
 
         return response()->json([
             'message' => 'Grade created succesfully',
@@ -90,13 +124,12 @@ class GradeController extends Controller
         }
 
         $validated = $request->validate([
-            'enrollment_id' => 'sometimes|exists|enrollments,id',
-            'subject_id' => 'sometimes|exists|subjects,id',
-            'teacher_id' => 'sometimes|exists|users,id',
-            'first_sem' => 'sometimes|integer|max:20',
-            'second_sem' => 'sometimes|integer|max:20',
-            'semester_final_grade' => 'sometimes|integer|max:20',
-            'general_average' => 'sometimes|integer|max:20',
+            'enrollment_id' => 'sometimes|exists:enrollments,id',
+            'subject_id' => 'sometimes|exists:subjects,id',
+            'q1' => 'sometimes|integer|min:0|max:100',
+            'q2' => 'sometimes|integer|min:0|max:100',
+            'q3' => 'sometimes|integer|min:0|max:100',
+            'q4' => 'sometimes|integer|min:0|max:100',
         ]);
 
         $grade->update($validated);

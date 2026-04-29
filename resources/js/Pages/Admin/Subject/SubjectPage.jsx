@@ -15,6 +15,7 @@ export default function SubjectPage() {
         semester: "",
         grade_level_id: "",
         section_id: "",
+        subject_indicate: "",
     });
 
     const handleChange = (e) => {
@@ -75,6 +76,7 @@ export default function SubjectPage() {
             setFormData({
                 name: "",
                 semester: "",
+                subject_indicate: "",
                 grade_level_id: "",
                 section_id: "",
             });
@@ -93,6 +95,7 @@ export default function SubjectPage() {
         setFormData({
             name: subject.name,
             semester: subject.semester,
+            subject_indicate: subject.subject_indicate,
             grade_level_id: subject.grade_level_id,
             section_id: subject.section_id,
         });
@@ -146,6 +149,23 @@ export default function SubjectPage() {
                                 <option value="">Select Semester</option>
                                 <option value="1ST">1st Semester</option>
                                 <option value="2ND">2nd Semester</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label>Subject Indicate</label>
+                            <select
+                                name="subject_indicate"
+                                value={formData.subject_indicate}
+                                onChange={handleChange}
+                                className="w-full border rounded-md px-3 py-2 focus:ring:2 focus:ring-blue-500"
+                            >
+                                <option value="">
+                                    Select Subject Indicate
+                                </option>
+                                <option value="Core">Core</option>
+                                <option value="Applied">Applied</option>
+                                <option value="Specialized">Specialized</option>
                             </select>
                         </div>
                         <div>
@@ -206,7 +226,7 @@ export default function SubjectPage() {
                         </div>
                     </form>
                 </div>
-                <div className="h=9/10 w-full bg-red-500">
+                <div className="h=9/10 w-full">
                     <table className="table-auto">
                         <thead>
                             <tr>

@@ -18,6 +18,10 @@ class Grade extends Model
         'second_sem',
         'semester_final_grade',
         'general_average',
+        'status',
+        'is_finalized',
+        'remedial',
+        'final_grade'
     ];
 
     public function enrollment()
