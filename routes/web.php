@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\EnrollmentController;
-use App\Http\Controllers\FuckController;
 use App\Http\Controllers\GradeController;
 use App\Http\Controllers\GradeLevelController;
 use App\Http\Controllers\LearningController;

@@ -21,7 +21,7 @@ class Grade extends Model
         'status',
         'is_finalized',
         'remedial',
-        'final_grade'
+        'final_grade',
     ];
 
     public function enrollment()

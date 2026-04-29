@@ -20,16 +20,16 @@ class GradeController extends Controller
         $average = $quarters->count() ? $quarters->avg() : 0;
 
         $final = $average;
-        $status = $average >= 75 ? "PASSED" : "FAILED";
+        $status = $average >= 75 ? 'PASSED' : 'FAILED';
 
-        if (!empty($data['remedial'])) {
+        if (! empty($data['remedial'])) {
             $final = ($average + $data['remedial']) / 2;
             $status = $final >= 75 ? 'PASSED' : 'FAILED';
         }
 
         return [
             'final_grade' => round($final, 2),
-            'status' => $status
+            'status' => $status,
         ];
     }
 
