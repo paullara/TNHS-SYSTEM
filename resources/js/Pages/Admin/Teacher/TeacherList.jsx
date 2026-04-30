@@ -33,8 +33,13 @@ export default function TeacherList() {
     return (
         <AdminLayout>
             <Head title="Teacher" />
+            <div className="w-full flex items-end justify-end">
+                <button className="mr-4 h-10 w-32 bg-blue-600 rounded text-white hover:bg-blue-700">
+                    Add Teacher
+                </button>
+            </div>
             <div className="py-4 max-w-7xl mx-auto px-4">
-                <div className="bg-white shadow overflow-hidden sm:rounded-md">
+                <div className="bg-white shadow overflow-hidde sm:rounded-md">
                     <table className="w-full table-auto divide-y divide-gray-200">
                         <thead className="bg-gray-100">
                             <tr>

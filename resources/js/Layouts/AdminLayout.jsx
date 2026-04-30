@@ -193,7 +193,7 @@ export default function InstructorLayout({ header, children }) {
                         )}
                         {route().current("teachers.list") && (
                             <h1 className="text-xl font-medium tracking-wide">
-                                Teachers
+                                Teachers List
                             </h1>
                         )}
                         {route().current("teachers.create") && (
