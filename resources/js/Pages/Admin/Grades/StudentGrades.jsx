@@ -442,7 +442,7 @@ export default function StudentGrades() {
             {/* SEARCH */}
             <form
                 onSubmit={handleSearch}
-                className="mb-2 flex gap-2 items-end no-print"
+                className="mb-2 flex gap-2 justify-end items-end no-print w-full"
             >
                 <input
                     value={lrn}
@@ -478,7 +478,7 @@ export default function StudentGrades() {
             </form>
 
             {/* DATA */}
-            <div className="printable p-3">
+            <div className="printable p-3 w-full flex justify-center items-center">
                 {!hasSearched && (
                     <p>Please search a student LRN to display grade data.</p>
                 )}
