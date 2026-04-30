@@ -34,9 +34,12 @@ export default function TeacherList() {
         <AdminLayout>
             <Head title="Teacher" />
             <div className="w-full flex items-end justify-end">
-                <button className="mr-4 h-10 w-32 bg-blue-600 rounded text-white hover:bg-blue-700">
+                <Link
+                    href={route("teachers.create")}
+                    className="mr-4 h-10 w-32 bg-blue-600 rounded text-white hover:bg-blue-700 flex items-center justify-center"
+                >
                     Add Teacher
-                </button>
+                </Link>
             </div>
             <div className="py-4 max-w-7xl mx-auto px-4">
                 <div className="bg-white shadow overflow-hidde sm:rounded-md">

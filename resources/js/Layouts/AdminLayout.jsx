@@ -85,14 +85,14 @@ export default function InstructorLayout({ header, children }) {
                             Teachers
                         </h1>
                     </Link>
-                    <Link
+                    {/* <Link
                         href={route("teachers.create")}
                         className="flex items-center gap-2 mb-6"
                     >
                         <h1 className="text-black text-lg font-medium">
                             Teachers Create
                         </h1>
-                    </Link>
+                    </Link> */}
                     <Link
                         href={route("student.create")}
                         className="flex items-center gap-2 mb-6"
