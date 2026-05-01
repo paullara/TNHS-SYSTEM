@@ -7,6 +7,7 @@ export default function SectionList() {
     const [sections, setSections] = useState([]);
     const [editingId, setEditingId] = useState(null);
     const [gradeLevels, setGradeLevels] = useState([]);
+    const [showForm, setShowForm] = useState(true);
     const [teachers, setTeachers] = useState([]);
     const [formData, setFormData] = useState({
         name: "",
@@ -114,101 +115,128 @@ export default function SectionList() {
 
     return (
         <AdminLayout>
-            <div className="h-screen ">
-                <div className="max-w-4xl mx-auto bg-white shadow-md rounded-lg p-6 mb-8">
-                    <h2 className="text-lg font-semibold text-gray-700 mb-4">
-                        {editingId ? "Edit Section" : "Create Section"}
-                    </h2>
-
-                    <form onSubmit={handleSubmit} className="space-y-4">
-                        {/* Section Name */}
-                        <div>
-                            <label className="text-sm text-gray-600">
-                                Section Name
-                            </label>
-                            <input
-                                type="text"
-                                name="name"
-                                value={formData.name}
-                                onChange={handleChange}
-                                className="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500"
-                                placeholder="Enter section name"
-                            />
-                            <InputError message={errors.name} />
-                        </div>
-
-                        {/* Two Inputs Row */}
-                        <div className="grid grid-cols-2 gap-4">
-                            {/* Adviser */}
-                            <div>
-                                <label className="text-sm text-gray-600">
-                                    Adviser
-                                </label>
-                                <select
-                                    name="adviser_id"
-                                    value={formData.adviser_id}
-                                    onChange={handleChange}
-                                    className="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500"
-                                >
-                                    <option value="">Select Teacher</option>
-                                    {teachers.map((teacher) => (
-                                        <option
-                                            key={teacher.id}
-                                            value={teacher.id}
-                                        >
-                                            {teacher.firstname}{" "}
-                                            {teacher.lastname}
-                                        </option>
-                                    ))}
-                                </select>
-                                <InputError message={errors.adviser_id} />
-                            </div>
-
-                            {/* Grade Level */}
-                            <div>
-                                <label className="text-sm text-gray-600">
-                                    Grade Level
-                                </label>
-                                <select
-                                    name="grade_level_id"
-                                    value={formData.grade_level_id}
-                                    onChange={handleChange}
-                                    className="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500"
-                                >
-                                    <option value="">Select Grade Level</option>
-                                    {gradeLevels.map((gradeLevel) => (
-                                        <option
-                                            key={gradeLevel.id}
-                                            value={gradeLevel.id}
-                                        >
-                                            {gradeLevel.name}
-                                        </option>
-                                    ))}
-                                </select>
-                                <InputError message={errors.grade_level_id} />
-                            </div>
-                        </div>
-
-                        {/* Button */}
-                        <div className="flex justify-end pt-2">
+            <div className="min-h-screen bg-gray-50 p-6">
+                <div
+                    className={`grid gap-6 ${showForm ? "lg:grid-cols-3" : "grid-cols-1"}`}
+                >
+                    <div
+                        className={`bg-white p-6 rounded-2xl shadow-sm ${showForm ? "col-span-1" : "hidden"}`}
+                    >
+                        <div className="flex justify-between items-center mb-4">
+                            <h2 className="text-xl font-semibold text-gray-700">
+                                Add Student
+                            </h2>
                             <button
-                                type="submit"
-                                disabled={loading}
-                                className="bg-blue-600 text-white px-5 py-2 rounded-md text-sm font-medium disabled:opacity-50"
+                                onClick={() => setShowForm(false)}
+                                className="text-gray-400 hover:text-gray-600"
                             >
-                                {loading
-                                    ? editingId
-                                        ? "Updating..."
-                                        : "Creating..."
-                                    : editingId
-                                      ? "Update Section"
-                                      : "Create Section"}
+                                ✕
                             </button>
                         </div>
-                    </form>
-                </div>
-                <div className="h-9/10 w-full">
-                    <div className="bg-white shadow overflow-hidden sm:rounded-md">
+
+                        <form onSubmit={handleSubmit} className="space-y-4">
+                            <div>
+                                <label className="text-sm text-gray-600">
+                                    Section Name
+                                </label>
+                                <input
+                                    type="text"
+                                    name="name"
+                                    value={formData.name}
+                                    onChange={handleChange}
+                                    className="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500"
+                                    placeholder="Enter section name"
+                                />
+                                <InputError message={errors.name} />
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label className="text-sm text-gray-600">
+                                        Adviser
+                                    </label>
+                                    <select
+                                        name="adviser_id"
+                                        value={formData.adviser_id}
+                                        onChange={handleChange}
+                                        className="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500"
+                                    >
+                                        <option value="">Select Teacher</option>
+                                        {teachers.map((teacher) => (
+                                            <option
+                                                key={teacher.id}
+                                                value={teacher.id}
+                                            >
+                                                {teacher.firstname}{" "}
+                                                {teacher.lastname}
+                                            </option>
+                                        ))}
+                                    </select>
+                                    <InputError message={errors.adviser_id} />
+                                </div>
+
+                                <div>
+                                    <label className="text-sm text-gray-600">
+                                        Grade Level
+                                    </label>
+                                    <select
+                                        name="grade_level_id"
+                                        value={formData.grade_level_id}
+                                        onChange={handleChange}
+                                        className="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500"
+                                    >
+                                        <option value="">
+                                            Select Grade Level
+                                        </option>
+                                        {gradeLevels.map((gradeLevel) => (
+                                            <option
+                                                key={gradeLevel.id}
+                                                value={gradeLevel.id}
+                                            >
+                                                {gradeLevel.name}
+                                            </option>
+                                        ))}
+                                    </select>
+                                    <InputError
+                                        message={errors.grade_level_id}
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="flex justify-end pt-2">
+                                <button
+                                    type="submit"
+                                    disabled={loading}
+                                    className="bg-blue-600 text-white px-5 py-2 rounded-md text-sm font-medium disabled:opacity-50"
+                                >
+                                    {loading
+                                        ? editingId
+                                            ? "Updating..."
+                                            : "Creating..."
+                                        : editingId
+                                          ? "Update Section"
+                                          : "Create Section"}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    <div
+                        className={`bg-white p-6 rounded-2xl shadow-sm overflow-auto ${showForm ? "col-span-2" : "col-span-1"}`}
+                    >
+                        <div className="flex justify-between items-center mb-4">
+                            <h2 className="text-xl font-semibold text-gray-700">
+                                Section List
+                            </h2>
+                            {!showForm && (
+                                <button
+                                    onClick={() => setShowForm(true)}
+                                    className="bg-blue-500 text-white px-4 py-2 rounded-lg text-sm"
+                                >
+                                    Add Section
+                                </button>
+                            )}
+                        </div>
+
                         <table className="w-full table-auto divide-y divide-gray-200">
                             <thead className="bg-gray-100">
                                 <tr>

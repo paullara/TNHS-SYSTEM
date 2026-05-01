@@ -8,6 +8,7 @@ export default function StudentCreate() {
     const [errors, setErrors] = useState({});
     const [loading, setLoading] = useState(false);
     const [editingId, setEditingId] = useState(null);
+    const [showForm, setShowForm] = useState(false);
     const [formData, setFormData] = useState({
         LRN: "",
         firstname: "",
@@ -96,12 +97,24 @@ export default function StudentCreate() {
     return (
         <Admin>
             <div className="min-h-screen bg-gray-50 p-6">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div
+                    className={`grid gap-6 ${showForm ? "lg:grid-cols-3" : "grid-cols-1"}`}
+                >
                     {/* FORM CARD */}
-                    <div className="bg-white p-6 rounded-2xl shadow-sm">
-                        <h2 className="text-xl font-semibold mb-4 text-gray-700">
-                            Add Student
-                        </h2>
+                    <div
+                        className={`bg-white p-6 rounded-2xl shadow-sm ${showForm ? "col-span-1" : "hidden"}`}
+                    >
+                        <div className="flex justify-between items-center mb-4">
+                            <h2 className="text-xl font-semibold text-gray-700">
+                                Add Student
+                            </h2>
+                            <button
+                                onClick={() => setShowForm(false)}
+                                className="text-gray-400 hover:text-gray-600"
+                            >
+                                ✕
+                            </button>
+                        </div>
 
                         <form
                             onSubmit={handleSubmit}
@@ -178,10 +191,22 @@ export default function StudentCreate() {
                     </div>
 
                     {/* TABLE CARD */}
-                    <div className="bg-white p-6 rounded-2xl shadow-sm overflow-auto">
-                        <h2 className="text-xl font-semibold mb-4 text-gray-700">
-                            Student List
-                        </h2>
+                    <div
+                        className={`bg-white p-6 rounded-2xl shadow-sm overflow-auto ${showForm ? "col-span-2" : "col-span-1"}`}
+                    >
+                        <div className="flex justify-between items-center mb-4">
+                            <h2 className="text-xl font-semibold text-gray-700">
+                                Student List
+                            </h2>
+                            {!showForm && (
+                                <button
+                                    onClick={() => setShowForm(true)}
+                                    className="bg-blue-500 text-white px-4 py-2 rounded-lg text-sm"
+                                >
+                                    + Add Student
+                                </button>
+                            )}
+                        </div>
 
                         <table className="w-full text-sm text-left">
                             <thead>
@@ -213,7 +238,7 @@ export default function StudentCreate() {
                                                     {s.gender}
                                                 </span>
                                             </td>
-                                            <td>
+                                            <td className="flex items-start justify-start gap-3 mt-1">
                                                 <button
                                                     onClick={() =>
                                                         handleEdit(s)
