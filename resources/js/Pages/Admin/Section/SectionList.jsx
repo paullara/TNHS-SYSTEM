@@ -7,7 +7,7 @@ export default function SectionList() {
     const [sections, setSections] = useState([]);
     const [editingId, setEditingId] = useState(null);
     const [gradeLevels, setGradeLevels] = useState([]);
-    const [showForm, setShowForm] = useState(true);
+    const [showForm, setShowForm] = useState(false);
     const [teachers, setTeachers] = useState([]);
     const [formData, setFormData] = useState({
         name: "",
@@ -109,6 +109,11 @@ export default function SectionList() {
             console.error(err);
         }
     };
+
+    const handleEditClick = (section) => {
+        handleEdit(section);
+        setShowForm(true);
+    };
     useEffect(() => {
         fetchSections();
     }, []);
@@ -120,11 +125,11 @@ export default function SectionList() {
                     className={`grid gap-6 ${showForm ? "lg:grid-cols-3" : "grid-cols-1"}`}
                 >
                     <div
-                        className={`bg-white p-6 rounded-2xl shadow-sm ${showForm ? "col-span-1" : "hidden"}`}
+                        className={`bg-white p-6 rounded-2xl shadow-sm ${showForm ? "col-span-5" : "hidden"}`}
                     >
                         <div className="flex justify-between items-center mb-4">
                             <h2 className="text-xl font-semibold text-gray-700">
-                                Add Student
+                                {editingId ? "Edit Section" : "Add Section"}
                             </h2>
                             <button
                                 onClick={() => setShowForm(false)}
@@ -149,7 +154,6 @@ export default function SectionList() {
                                 />
                                 <InputError message={errors.name} />
                             </div>
-
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
                                     <label className="text-sm text-gray-600">
@@ -174,7 +178,6 @@ export default function SectionList() {
                                     </select>
                                     <InputError message={errors.adviser_id} />
                                 </div>
-
                                 <div>
                                     <label className="text-sm text-gray-600">
                                         Grade Level
@@ -202,7 +205,6 @@ export default function SectionList() {
                                     />
                                 </div>
                             </div>
-
                             <div className="flex justify-end pt-2">
                                 <button
                                     type="submit"
@@ -220,75 +222,75 @@ export default function SectionList() {
                             </div>
                         </form>
                     </div>
-                    <div
-                        className={`bg-white p-6 rounded-2xl shadow-sm overflow-auto ${showForm ? "col-span-2" : "col-span-1"}`}
-                    >
-                        <div className="flex justify-between items-center mb-4">
-                            <h2 className="text-xl font-semibold text-gray-700">
-                                Section List
-                            </h2>
-                            {!showForm && (
-                                <button
-                                    onClick={() => setShowForm(true)}
-                                    className="bg-blue-500 text-white px-4 py-2 rounded-lg text-sm"
-                                >
-                                    Add Section
-                                </button>
-                            )}
-                        </div>
-
-                        <table className="w-full table-auto divide-y divide-gray-200">
-                            <thead className="bg-gray-100">
-                                <tr>
-                                    <th className="px-6 py-3 text-left text-xs text-gray-500 uppercase">
-                                        Section
-                                    </th>
-                                    <th className="px-6 py-3 text-left text-xs text-gray-500 uppercase">
-                                        Grade Level
-                                    </th>
-                                    <th className="px-6 py-3 text-left text-gray-500 uppercase">
-                                        Adviser
-                                    </th>
-                                    <th className="px-6 py-3 text-left text-gray-500 uppercase">
-                                        Actions
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody className="bg-white">
-                                {sections.map((section) => (
-                                    <tr key={section.id}>
-                                        <td className="px-6 py-4 whitespace-nowrap">
-                                            {section.name}
-                                        </td>
-                                        <td className="px-6 py-4 whitespace-nowrap">
-                                            {section.grade_level.name}
-                                        </td>
-                                        <td className="px-6 py-4 whitespace-nowrap">
-                                            {`${section.adviser.firstname} ${section.adviser.middlename ?? ""} ${section.adviser.lastname}`}
-                                        </td>
-                                        <td className="px-6 py-4 space-x-2">
-                                            <button
-                                                onClick={() =>
-                                                    handleEdit(section)
-                                                }
-                                                className="bg-yellow-500 text-white px-3 py-1 rounded"
-                                            >
-                                                Edit
-                                            </button>
-                                            <button
-                                                onClick={() =>
-                                                    handleDelete(section.id)
-                                                }
-                                                className="bg-red-500 text-white px-3 py-1 rounded"
-                                            >
-                                                Delete
-                                            </button>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
+                </div>
+                <div
+                    className={`bg-white p-6 h-[500px] rounded-2xl shadow-sm overflow-auto ${showForm ? "col-span-2" : "col-span-1"}`}
+                >
+                    <div className="flex justify-between items-center mb-4">
+                        <h2 className="text-xl font-semibold text-gray-700">
+                            Section List
+                        </h2>
+                        {!showForm && (
+                            <button
+                                onClick={() => setShowForm(true)}
+                                className="bg-blue-500 text-white px-4 py-2 rounded-lg text-sm"
+                            >
+                                Add Section
+                            </button>
+                        )}
                     </div>
+
+                    <table className="w-full table-auto divide-y divide-gray-200">
+                        <thead className="bg-gray-100">
+                            <tr>
+                                <th className="px-6 py-3 text-left text-xs text-gray-500 uppercase">
+                                    Section
+                                </th>
+                                <th className="px-6 py-3 text-left text-xs text-gray-500 uppercase">
+                                    Grade Level
+                                </th>
+                                <th className="px-6 py-3 text-left text-gray-500 uppercase">
+                                    Adviser
+                                </th>
+                                <th className="px-6 py-3 text-left text-gray-500 uppercase">
+                                    Actions
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody className="bg-white">
+                            {sections.map((section) => (
+                                <tr key={section.id}>
+                                    <td className="px-6 py-4 whitespace-nowrap">
+                                        {section.name}
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap">
+                                        {section.grade_level.name}
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap">
+                                        {`${section.adviser.firstname} ${section.adviser.middlename ?? ""} ${section.adviser.lastname}`}
+                                    </td>
+                                    <td className="px-6 py-4 space-x-2">
+                                        <button
+                                            onClick={() =>
+                                                handleEditClick(section)
+                                            }
+                                            className="bg-yellow-500 text-white px-3 py-1 rounded"
+                                        >
+                                            Edit
+                                        </button>
+                                        <button
+                                            onClick={() =>
+                                                handleDelete(section.id)
+                                            }
+                                            className="bg-red-500 text-white px-3 py-1 rounded"
+                                        >
+                                            Delete
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </AdminLayout>

@@ -33,18 +33,25 @@ export default function TeacherList() {
     return (
         <AdminLayout>
             <Head title="Teacher" />
-            <div className="w-full flex items-end justify-end">
-                <Link
-                    href={route("teachers.create")}
-                    className="mr-4 h-10 w-32 bg-blue-600 rounded text-white hover:bg-blue-700 flex items-center justify-center"
-                >
-                    Add Teacher
-                </Link>
+            <div className="w-full flex items-end justify-between p-2">
+                <div>
+                    <h1 className="text-xl font-semibold">
+                        Teachers Information
+                    </h1>
+                </div>
+                <div>
+                    <Link
+                        href={route("teachers.create")}
+                        className="h-10 w-32 bg-blue-600 rounded text-white hover:bg-blue-700 flex items-center justify-center"
+                    >
+                        Add Teacher
+                    </Link>
+                </div>
             </div>
-            <div className="py-4 max-w-7xl mx-auto px-4">
+            <div className="py-4 max-w-7xl mx-auto px-2">
                 <div className="bg-white shadow overflow-hidde sm:rounded-md">
                     <table className="w-full table-auto divide-y divide-gray-200">
-                        <thead className="bg-gray-100">
+                        <thead className="bg-gray-white">
                             <tr>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                                     Username

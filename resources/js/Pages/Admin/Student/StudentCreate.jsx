@@ -16,6 +16,7 @@ export default function StudentCreate() {
         lastname: "",
         birthdate: "",
         gender: "",
+        address: "",
     });
 
     const handleChange = (e) => {
@@ -45,6 +46,7 @@ export default function StudentCreate() {
                 lastname: "",
                 birthdate: "",
                 gender: "",
+                address: "",
             });
         } catch (err) {
             console.log("ERROR:", err.response);
@@ -67,6 +69,7 @@ export default function StudentCreate() {
             lastname: student.lastname,
             birthdate: student.birthdate,
             gender: student.gender,
+            address: student.address,
         });
     };
 
@@ -98,7 +101,7 @@ export default function StudentCreate() {
         <Admin>
             <div className="min-h-screen bg-gray-50 p-6">
                 <div
-                    className={`grid gap-6 ${showForm ? "lg:grid-cols-3" : "grid-cols-1"}`}
+                    className={`grid gap-6 ${showForm ? "lg:grid-cols-" : "grid-cols-1"}`}
                 >
                     {/* FORM CARD */}
                     <div
@@ -120,25 +123,33 @@ export default function StudentCreate() {
                             onSubmit={handleSubmit}
                             className="grid grid-cols-1 gap-4"
                         >
-                            <input
-                                type="text"
-                                name="LRN"
-                                value={formData.LRN}
-                                onChange={handleChange}
-                                placeholder="LRN"
-                                className="border rounded-lg p-3"
-                            />
-                            <InputError message={errors.LRN} />
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <input
+                                        type="text"
+                                        name="LRN"
+                                        value={formData.LRN}
+                                        onChange={handleChange}
+                                        placeholder="LRN"
+                                        className="w-full border rounded-lg p-3"
+                                    />
+                                    <InputError message={errors.LRN} />
+                                </div>
+                                <div>
+                                    {" "}
+                                    <input
+                                        type="text"
+                                        name="firstname"
+                                        value={formData.firstname}
+                                        onChange={handleChange}
+                                        placeholder="First Name"
+                                        className="w-full border rounded-lg p-3"
+                                    />
+                                    <InputError message={errors.firstname} />
+                                </div>
+                            </div>
 
-                            <input
-                                type="text"
-                                name="firstname"
-                                value={formData.firstname}
-                                onChange={handleChange}
-                                placeholder="First Name"
-                                className="border rounded-lg p-3"
-                            />
-                            <InputError message={errors.firstname} />
+                            <div className="grid grid-cols-2 gap-4"></div>
 
                             <input
                                 type="text"
@@ -191,88 +202,86 @@ export default function StudentCreate() {
                     </div>
 
                     {/* TABLE CARD */}
-                    <div
-                        className={`bg-white p-6 rounded-2xl shadow-sm overflow-auto ${showForm ? "col-span-2" : "col-span-1"}`}
-                    >
-                        <div className="flex justify-between items-center mb-4">
-                            <h2 className="text-xl font-semibold text-gray-700">
-                                Student List
-                            </h2>
-                            {!showForm && (
-                                <button
-                                    onClick={() => setShowForm(true)}
-                                    className="bg-blue-500 text-white px-4 py-2 rounded-lg text-sm"
-                                >
-                                    + Add Student
-                                </button>
-                            )}
-                        </div>
+                </div>
+                <div
+                    className={`bg-white p-6 rounded-2xl shadow-sm overflow-auto ${showForm ? "col-span-2" : "col-span-1"}`}
+                >
+                    <div className="flex justify-between items-center mb-4">
+                        <h2 className="text-xl font-semibold text-gray-700">
+                            Student List
+                        </h2>
+                        {!showForm && (
+                            <button
+                                onClick={() => setShowForm(true)}
+                                className="bg-blue-500 text-white px-4 py-2 rounded-lg text-sm"
+                            >
+                                + Add Student
+                            </button>
+                        )}
+                    </div>
 
-                        <table className="w-full text-sm text-left">
-                            <thead>
-                                <tr className="border-b text-gray-500">
-                                    <th className="py-2">LRN</th>
-                                    <th>Name</th>
-                                    <th>Birthdate</th>
-                                    <th>Gender</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {students.length > 0 ? (
-                                    students.map((s) => (
-                                        <tr key={s.id} className="border-b">
-                                            <td className="py-2">{s.LRN}</td>
-                                            <td>
-                                                {s.firstname} {s.lastname}
-                                            </td>
-                                            <td>{s.birthdate}</td>
-                                            <td>
-                                                <span
-                                                    className={`px-2 py-1 rounded-full text-xs ${
-                                                        s.gender === "Male"
-                                                            ? "bg-blue-100 text-blue-600"
-                                                            : "bg-pink-100 text-pink-600"
-                                                    }`}
-                                                >
-                                                    {s.gender}
-                                                </span>
-                                            </td>
-                                            <td className="flex items-start justify-start gap-3 mt-1">
-                                                <button
-                                                    onClick={() =>
-                                                        handleEdit(s)
-                                                    }
-                                                    className="bg-yellow-500 text-white px-3 py-1 rounded"
-                                                >
-                                                    Edit
-                                                </button>
-                                                <button
-                                                    onClick={() =>
-                                                        handleDelete(s.id)
-                                                    }
-                                                    className="bg-red-500
+                    <table className="w-full text-sm text-left">
+                        <thead>
+                            <tr className="border-b text-gray-500">
+                                <th className="py-2">LRN</th>
+                                <th>Name</th>
+                                <th>Birthdate</th>
+                                <th>Gender</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {students.length > 0 ? (
+                                students.map((s) => (
+                                    <tr key={s.id} className="border-b">
+                                        <td className="py-2">{s.LRN}</td>
+                                        <td>
+                                            {s.firstname} {s.lastname}
+                                        </td>
+                                        <td>{s.birthdate}</td>
+                                        <td>
+                                            <span
+                                                className={`px-2 py-1 rounded-full text-xs ${
+                                                    s.gender === "Male"
+                                                        ? "bg-blue-100 text-blue-600"
+                                                        : "bg-pink-100 text-pink-600"
+                                                }`}
+                                            >
+                                                {s.gender}
+                                            </span>
+                                        </td>
+                                        <td className="flex items-start justify-start gap-3 mt-1">
+                                            <button
+                                                onClick={() => handleEdit(s)}
+                                                className="bg-yellow-500 text-white px-3 py-1 rounded"
+                                            >
+                                                Edit
+                                            </button>
+                                            <button
+                                                onClick={() =>
+                                                    handleDelete(s.id)
+                                                }
+                                                className="bg-red-500
                                                     text-white px-3 py-1
                                                     rounded"
-                                                >
-                                                    Delete
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    ))
-                                ) : (
-                                    <tr>
-                                        <td
-                                            colSpan="4"
-                                            className="text-center py-4 text-gray-400"
-                                        >
-                                            No students found
+                                            >
+                                                Delete
+                                            </button>
                                         </td>
                                     </tr>
-                                )}
-                            </tbody>
-                        </table>
-                    </div>
+                                ))
+                            ) : (
+                                <tr>
+                                    <td
+                                        colSpan="4"
+                                        className="text-center py-4 text-gray-400"
+                                    >
+                                        No students found
+                                    </td>
+                                </tr>
+                            )}
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </Admin>

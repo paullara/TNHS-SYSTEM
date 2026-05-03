@@ -3,55 +3,61 @@ import Dropdown from "@/Components/Dropdown";
 import NavLink from "@/Components/NavLink";
 import { Link, usePage } from "@inertiajs/react";
 import { useState, useEffect } from "react";
-import { Menu, Bell, MessageCircle, ChevronDown } from "lucide-react";
+import {
+    Menu,
+    Bell,
+    MessageCircle,
+    ChevronDown,
+    ChevronUp,
+} from "lucide-react";
 import axios from "axios";
 
 export default function InstructorLayout({ header, children }) {
     const { auth } = usePage().props;
+    const { url } = usePage();
     const user = auth.user;
     const [sidebarOpen, setSidebarOpen] = useState(false);
 
     // ✅ Notification State
     const [notifOpen, setNotifOpen] = useState(false);
     const [notifications, setNotifications] = useState([]);
+    const [open, setOpen] = useState(url.startsWith("/teachers"));
     const [loading, setLoading] = useState(false);
 
-    // ✅ Fetch Notifications
-    const fetchNotifications = async () => {
-        setLoading(true);
-        try {
-            const res = await axios.get("/notifications");
-            setNotifications(
-                Array.isArray(res.data.notifications)
-                    ? res.data.notifications
-                    : [],
-            );
-        } catch (err) {
-            setNotifications([]);
-        }
-        setLoading(false);
-    };
+    // const fetchNotifications = async () => {
+    //     setLoading(true);
+    //     try {
+    //         const res = await axios.get("/notifications");
+    //         setNotifications(
+    //             Array.isArray(res.data.notifications)
+    //                 ? res.data.notifications
+    //                 : [],
+    //         );
+    //     } catch (err) {
+    //         setNotifications([]);
+    //     }
+    //     setLoading(false);
+    // };
 
-    useEffect(() => {
-        fetchNotifications();
-    }, []);
+    // useEffect(() => {
+    //     fetchNotifications();
+    // }, []);
 
-    const markAsRead = async (id) => {
-        try {
-            await axios.post(`/notifications/${id}/read`);
-            fetchNotifications();
-        } catch (err) {
-            console.log(err);
-        }
-    };
+    // const markAsRead = async (id) => {
+    //     try {
+    //         await axios.post(`/notifications/${id}/read`);
+    //         fetchNotifications();
+    //     } catch (err) {
+    //         console.log(err);
+    //     }
+    // };
 
-    // ✅ Unread Count
     const unreadCount = notifications.filter((n) => !n.read_at).length;
 
     return (
-        <div className="h-screen flex">
+        <div className="h-screen flex bg-white p-2 gap-2">
             {/* Sidebar */}
-            <aside className="bg-gray-50 border-r w-38 flex flex-col h-screen">
+            <aside className="bg-gray-50 w-38 flex flex-col h-screen rounded-md">
                 {/* Logo */}
                 <div className="flex items-center justify-start mb-6 p-4">
                     <Link href="/" className="flex items-center gap-2">
@@ -76,15 +82,53 @@ export default function InstructorLayout({ header, children }) {
                             Dashboard
                         </h1>
                     </Link>
+                    <div className="mb-6">
+                        {/* Header with toggle */}
+                        <button
+                            onClick={() => setOpen(!open)}
+                            className="flex items-center justify-between w-full text-left mb-2"
+                        >
+                            <h1 className="text-black text-lg font-medium">
+                                Teachers
+                            </h1>
 
-                    <Link
-                        href={route("teachers.list")}
-                        className="flex items-center gap-2 mb-6"
-                    >
-                        <h1 className="text-black text-lg font-medium">
-                            Teachers
-                        </h1>
-                    </Link>
+                            <span className="text-gray-500 text-sm">
+                                {open ? (
+                                    <ChevronUp className="h-4" />
+                                ) : (
+                                    <ChevronDown className="h-4" />
+                                )}
+                            </span>
+                        </button>
+
+                        {/* Collapsible links */}
+                        {open && (
+                            <div className="flex flex-col gap-1 ml-3 pl-3 border-l">
+                                <Link
+                                    href={route("teachers.list")}
+                                    className={`text-lg ${
+                                        url.startsWith("/teachers") &&
+                                        !url.startsWith("/teachers/pds")
+                                            ? "text-blue-600"
+                                            : "text-gray-700"
+                                    }`}
+                                >
+                                    All Teachers
+                                </Link>
+
+                                <Link
+                                    href={route("teachers.list")}
+                                    className={`text-lg ${
+                                        url.startsWith("/teachers/pds")
+                                            ? "text-blue-600"
+                                            : "text-gray-700"
+                                    }`}
+                                >
+                                    Teachers PDS
+                                </Link>
+                            </div>
+                        )}
+                    </div>
                     {/* <Link
                         href={route("teachers.create")}
                         className="flex items-center gap-2 mb-6"
@@ -163,7 +207,7 @@ export default function InstructorLayout({ header, children }) {
                 </div>
 
                 {/* Sticky Profile + Logout (sticks to sidebar bottom) */}
-                <div className="sticky bottom-0 bg-gray-50 border-t p-4">
+                <div className="sticky bottom-0 bg-gray-50 p-4">
                     <NavLink
                         href={route("profile.edit")}
                         className="w-full px-3 py-2 rounded-md text-sm font-medium text-lg"
@@ -182,67 +226,67 @@ export default function InstructorLayout({ header, children }) {
             </aside>
 
             {/* Main content */}
-            <div className="flex-1 flex flex-col">
+            <div className="flex-1 flex flex-col gap-2">
                 {/* Header */}
-                <div className="flex items-center justify-between bg-white ">
+                <div className="flex items-center justify-between bg-gray-50 rounded-md ">
                     <div className="flex items-center p-6">
                         {route().current("admin.dashboard") && (
-                            <h1 className="text-xl font-medium tracking-wide">
+                            <h1 className="text-xl font-semibold tracking-wide">
                                 Dashboard
                             </h1>
                         )}
                         {route().current("teachers.list") && (
-                            <h1 className="text-xl font-medium tracking-wide">
-                                Teachers List
+                            <h1 className="text-xl font-semibold tracking-wide">
+                                All Teachers
                             </h1>
                         )}
                         {route().current("teachers.create") && (
-                            <h1 className="text-xl font-medium tracking-wide">
+                            <h1 className="text-xl font-semibold tracking-wide">
                                 Register Teacher
                             </h1>
                         )}
                         {route().current("section.list") && (
-                            <h1 className="text-xl font-medium tracking-wide">
-                                Sections
+                            <h1 className="text-xl font-semibold tracking-wide">
+                                All Sections
                             </h1>
                         )}
                         {route().current("sy.list") && (
-                            <h1 className="text-xl font-medium tracking-wide">
+                            <h1 className="text-xl font-semibold tracking-wide">
                                 School Year List
                             </h1>
                         )}
                         {route().current("gradelevel.page") && (
-                            <h1 className="text-xl font-medium tracking-wide">
+                            <h1 className="text-xl font-semibold tracking-wide">
                                 Grade Level List
                             </h1>
                         )}
                         {route().current("subject.page") && (
-                            <h1 className="text-xl font-medium tracking-wide">
+                            <h1 className="text-xl font-semibold tracking-wide">
                                 Subject List
                             </h1>
                         )}
                         {route().current("student.create") && (
-                            <h1 className="text-xl font-medium tracking-wide">
+                            <h1 className="text-xl font-semibold tracking-wide">
                                 Manage Student
                             </h1>
                         )}
                         {route().current("assign-subject") && (
-                            <h1 className="text-xl font-medium tracking-wide">
+                            <h1 className="text-xl font-semibold tracking-wide">
                                 Assign Subject to Teacher
                             </h1>
                         )}
                         {route().current("enrollment.create") && (
-                            <h1 className="text-xl font-medium tracking-wide">
+                            <h1 className="text-xl font-semibold tracking-wide">
                                 Manage Enrollment
                             </h1>
                         )}
                         {route().current("grade") && (
-                            <h1 className="text-xl font-medium tracking-wide">
+                            <h1 className="text-xl font-semibold tracking-wide">
                                 Student Academic Record Retrieval
                             </h1>
                         )}
                     </div>
-                    <header className="bg-white h-16 px-4 flex items-center justify-between">
+                    <header className="bg-gray-50 h-16 px-4 flex items-center justify-between">
                         <div className="flex items-center gap-3">
                             <button
                                 className="md:hidden"
@@ -305,12 +349,12 @@ export default function InstructorLayout({ header, children }) {
                 </div>
 
                 {/* Scrollable children */}
-                <main className="flex-1 overflow-y-auto p-2 bg-white">
+                <main className="flex-1 overflow-y-auto p-2 bg-gray-50 rounded-md">
                     {children}
                 </main>
 
                 {/* ✅ Notification Drawer */}
-                {notifOpen && (
+                {/* {notifOpen && (
                     <div className="fixed right-0 top-0 h-full w-96 bg-white border-l shadow-xl p-6 overflow-y-auto z-50">
                         <div className="flex justify-between items-center mb-4">
                             <h2 className="text-2xl font-bold">
@@ -358,7 +402,7 @@ export default function InstructorLayout({ header, children }) {
                             ))}
                         </div>
                     </div>
-                )}
+                )} */}
             </div>
         </div>
     );

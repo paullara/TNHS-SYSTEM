@@ -1,10 +1,12 @@
 import AdminLayout from "@/Layouts/AdminLayout";
 import { useState } from "react";
+import { router } from "@inertiajs/react";
 import axios from "axios";
 import InputError from "@/Components/InputError";
 
 export default function CreateTeacherAccount() {
     const [formData, setFormData] = useState({
+        username: "",
         firstname: "",
         middlename: "",
         lastname: "",
@@ -32,17 +34,7 @@ export default function CreateTeacherAccount() {
         try {
             await axios.post("/api/teachers", formData);
 
-            alert("Teacher account created successfully");
-
-            setFormData({
-                username: "",
-                firstname: "",
-                middlename: "",
-                lastname: "",
-                email: "",
-                password: "",
-                password_confirmation: "",
-            });
+            router.visit("/teachers");
         } catch (err) {
             if (err.response?.data?.errors) {
                 setErrors(err.response.data.errors);
