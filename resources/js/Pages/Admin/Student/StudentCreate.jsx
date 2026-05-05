@@ -93,6 +93,11 @@ export default function StudentCreate() {
         }
     };
 
+    const handleEditClick = (student) => {
+        handleEdit(student);
+        setShowForm(true);
+    };
+
     useEffect(() => {
         fetchStudents();
     }, []);
@@ -109,7 +114,9 @@ export default function StudentCreate() {
                     >
                         <div className="flex justify-between items-center mb-4">
                             <h2 className="text-xl font-semibold text-gray-700">
-                                Add Student
+                                {editingId
+                                    ? "Edit Student Info"
+                                    : "Add Student"}
                             </h2>
                             <button
                                 onClick={() => setShowForm(false)}
@@ -149,55 +156,64 @@ export default function StudentCreate() {
                                 </div>
                             </div>
 
-                            <div className="grid grid-cols-2 gap-4"></div>
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <input
+                                        type="text"
+                                        name="middlename"
+                                        value={formData.middlename}
+                                        onChange={handleChange}
+                                        placeholder="Middle Name"
+                                        className="w-full border rounded-lg p-3"
+                                    />
+                                    <InputError message={errors.middlename} />
+                                </div>
+                                <div>
+                                    <input
+                                        type="text"
+                                        name="lastname"
+                                        value={formData.lastname}
+                                        onChange={handleChange}
+                                        placeholder="Last Name"
+                                        className="w-full border rounded-lg p-3"
+                                    />
+                                    <InputError message={errors.lastname} />
+                                </div>
+                            </div>
 
-                            <input
-                                type="text"
-                                name="middlename"
-                                value={formData.middlename}
-                                onChange={handleChange}
-                                placeholder="Middle Name"
-                                className="border rounded-lg p-3"
-                            />
-                            <InputError message={errors.middlename} />
-
-                            <input
-                                type="text"
-                                name="lastname"
-                                value={formData.lastname}
-                                onChange={handleChange}
-                                placeholder="Last Name"
-                                className="border rounded-lg p-3"
-                            />
-                            <InputError message={errors.lastname} />
-
-                            <input
-                                type="date"
-                                name="birthdate"
-                                value={formData.birthdate}
-                                onChange={handleChange}
-                                className="border rounded-lg p-3"
-                            />
-                            <InputError message={errors.birthdate} />
-
-                            <select
-                                name="gender"
-                                value={formData.gender}
-                                onChange={handleChange}
-                                className="border rounded-lg p-3"
-                            >
-                                <option value="">Select Gender</option>
-                                <option value="Male">Male</option>
-                                <option value="Female">Female</option>
-                            </select>
-                            <InputError message={errors.gender} />
-
-                            <button
-                                className="bg-blue-500 text-white py-3 rounded-lg"
-                                disabled={loading}
-                            >
-                                {loading ? "Creating..." : "Create Student"}
-                            </button>
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <input
+                                        type="date"
+                                        name="birthdate"
+                                        value={formData.birthdate}
+                                        onChange={handleChange}
+                                        className="w-full border rounded-lg p-3"
+                                    />
+                                    <InputError message={errors.birthdate} />
+                                </div>
+                                <div>
+                                    <select
+                                        name="gender"
+                                        value={formData.gender}
+                                        onChange={handleChange}
+                                        className="w-full border rounded-lg p-3"
+                                    >
+                                        <option value="">Select Gender</option>
+                                        <option value="Male">Male</option>
+                                        <option value="Female">Female</option>
+                                    </select>
+                                    <InputError message={errors.gender} />
+                                </div>
+                            </div>
+                            <div className="flex items-center justify-end">
+                                <button
+                                    className="bg-blue-500 text-white py-3 rounded-lg w-80"
+                                    disabled={loading}
+                                >
+                                    {loading ? "Creating..." : "Create Student"}
+                                </button>
+                            </div>
                         </form>
                     </div>
 
@@ -252,7 +268,9 @@ export default function StudentCreate() {
                                         </td>
                                         <td className="flex items-start justify-start gap-3 mt-1">
                                             <button
-                                                onClick={() => handleEdit(s)}
+                                                onClick={() =>
+                                                    handleEditClick(s)
+                                                }
                                                 className="bg-yellow-500 text-white px-3 py-1 rounded"
                                             >
                                                 Edit
