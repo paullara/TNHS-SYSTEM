@@ -7,6 +7,7 @@ export default function GradeLevel() {
     const [gradeLevels, setGradeLevels] = useState([]);
     const [editingId, setEditingId] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [showForm, setShowForm] = useState(false);
     const [errors, setErrors] = useState({});
     const [formData, setFormData] = useState({
         name: "",
@@ -74,6 +75,11 @@ export default function GradeLevel() {
         }
     };
 
+    const handleEditClick = (gl) => {
+        handleEdit(gl);
+        setShowForm(true);
+    };
+
     console.log("Grade Levels", gradeLevels);
 
     useEffect(() => {
@@ -82,48 +88,84 @@ export default function GradeLevel() {
 
     return (
         <Admin>
-            <div className="h-screen">
-                <div className="max-4xl mx-auto bg-whte shadow-md rounded-md p-6 mb-8">
-                    <h2 className="text-lg font-semibold text-gray-700 mb-4">
-                        {editingId ? "Edit Grade Level" : "Create Grade Level"}
-                    </h2>
-
-                    <form onSubmit={handleSubmit} className="space-y-4">
-                        <div className="flex justify-between items-center">
-                            <div className="w-1/2">
-                                <label className="text-sm text-gray-600">
-                                    Grade Level
-                                </label>
-                                <input
-                                    type="text"
-                                    name="name"
-                                    value={formData.name}
-                                    onChange={handleChange}
-                                    className="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 ml-2"
-                                    placeholder="Grade level"
-                                />
-                                <InputError message={errors.name} />
-                            </div>
-                            <div className="w-1/2">
-                                <button
-                                    type="submit"
-                                    disabled={loading}
-                                    className="bg-blue-600 text-white px-5 py-2 rounded-md text-sm font-medium disabled:opacity-50"
-                                >
-                                    {loading
-                                        ? editingId
-                                            ? "Updating..."
-                                            : "Creating"
-                                        : editingId
-                                          ? "Update Section"
-                                          : "Create Grade Level"}
-                                </button>
-                            </div>
+            <div className="min-h-screen bg-gray-50 p-6">
+                <div
+                    className={`grid gap-6 ${
+                        showForm ? "lg-grid-cols-3" : "grid-cols"
+                    }`}
+                >
+                    <div
+                        className={`bg-white p-6 rounded-2xl shadow-sm ${
+                            showForm ? "col-span-5" : "hidden"
+                        }`}
+                    >
+                        <div className="flex justify-between items-center mb-4">
+                            <h2>
+                                {editingId
+                                    ? "Edit Grade Level"
+                                    : "Add Grade Level"}
+                            </h2>
+                            <button
+                                onClick={() => setShowForm(false)}
+                                className="text-gray-400 hover:text-gray-600"
+                            >
+                                ✕
+                            </button>
                         </div>
-                    </form>
-                </div>
-                <div className="h-9/10 w-full">
-                    <div className="bg-white shadow overflow-hidden sm:rounded-md">
+
+                        <form
+                            onSubmit={handleSubmit}
+                            className="space-y-4 w-full"
+                        >
+                            <div className="flex justify-start items-end gap-4">
+                                <div className="w-1/2">
+                                    <label className="text-sm text-gray-600">
+                                        Grade Level
+                                    </label>
+                                    <input
+                                        type="text"
+                                        name="name"
+                                        value={formData.name}
+                                        onChange={handleChange}
+                                        className="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 ml-2"
+                                        placeholder="Grade level"
+                                    />
+                                    <InputError message={errors.name} />
+                                </div>
+                                <div className="flex items-center justify-center ">
+                                    <button
+                                        type="submit"
+                                        disabled={loading}
+                                        className="bg-blue-600 text-white px-5 py-2 rounded-md text-sm font-medium disabled:opacity-50 h-[42px]"
+                                    >
+                                        {loading
+                                            ? editingId
+                                                ? "Updating..."
+                                                : "Creating"
+                                            : editingId
+                                              ? "Update Section"
+                                              : "Create Grade Level"}
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div
+                        className={`bg-white p-6 h-[500px] rounded-2xl shadow-sm overflow-auto ${showForm ? "col-span-5" : "col-span-1"}`}
+                    >
+                        <div className="flex justify-between items-center mb-4">
+                            <h2 className="text-xl font-semibold text-gray-700">
+                                School Year List
+                            </h2>
+                            {!showForm && (
+                                <button
+                                    onClick={() => setShowForm(true)}
+                                    className="bg-blue-500 text-white px-4 py-2 rounded-lg text-sm"
+                                >
+                                    Add Grade Level
+                                </button>
+                            )}
+                        </div>
                         <table className="w-full table-auto divide-y">
                             <thead className="bg-gray-100">
                                 <tr>
@@ -143,7 +185,9 @@ export default function GradeLevel() {
                                         </td>
                                         <td className="px-6 py-4 space-x-2">
                                             <button
-                                                onClick={() => handleEdit(gl)}
+                                                onClick={() =>
+                                                    handleEditClick(gl)
+                                                }
                                                 className="bg-yellow-500 text-white px-3 py-1 rounded"
                                             >
                                                 Edit

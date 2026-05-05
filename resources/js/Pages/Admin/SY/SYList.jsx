@@ -89,7 +89,7 @@ export default function SYList() {
         handleEdit(sy);
         setShowForm(true);
         console.log("Hello, na click mo na ako");
-    }
+    };
 
     useEffect(() => {
         fetchSy();
@@ -100,7 +100,7 @@ export default function SYList() {
             <div className="min-h-screen bg-gray-50 p-6">
                 <div
                     className={`grid gap-6 ${
-                        showForm ? "lg-grid-cols-3" : "grid-cols-"
+                        showForm ? "lg-grid-cols-3" : "grid-cols"
                     }`}
                 >
                     <div
@@ -120,7 +120,10 @@ export default function SYList() {
                             </button>
                         </div>
 
-                        <form onSubmit={handleSubmit} className="space-y-4 w-full">
+                        <form
+                            onSubmit={handleSubmit}
+                            className="space-y-4 w-full"
+                        >
                             <div>
                                 <label className="text-sm text-gray-600">
                                     Label
@@ -268,7 +271,9 @@ export default function SYList() {
                                         </td>
                                         <td className="px-6 py-4 space-x-2">
                                             <button
-                                                onClick={() => handleEditClick(sy)}
+                                                onClick={() =>
+                                                    handleEditClick(sy)
+                                                }
                                                 className="bg-yellow-500 text-white px-3 py-1 rounded"
                                             >
                                                 Edit
@@ -277,7 +282,6 @@ export default function SYList() {
                                             <button
                                                 onClick={() =>
                                                     handleDelete(sy.id)
-                                                    
                                                 }
                                                 className="bg-red-500 text-white px-3 py-1 rounded"
                                             >
