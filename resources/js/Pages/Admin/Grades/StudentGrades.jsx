@@ -476,7 +476,7 @@ export default function StudentGrades() {
             </form>
 
             {/* DATA */}
-            <div className="printable p-3 w-full flex flex-col justify-center items-center">
+            <div className="printable p-3 w-full flex justify-center items-center">
                 {!hasSearched && (
                     <p>Please search a student LRN to display grade data.</p>
                 )}

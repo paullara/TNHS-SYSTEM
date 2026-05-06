@@ -182,4 +182,9 @@ class AdminController extends Controller
     {
         return Inertia::render('TestPage/TestLayout');
     }
+
+    public function testGradePage()
+    {
+        return Inertia::render('Admin/TestGrade');
+    }
 }

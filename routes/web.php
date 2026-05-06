@@ -58,6 +58,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/learning', [LearningController::class, 'understanding'])->name('understanding');
     Route::get('/students-grade', [LearningController::class, 'studentGrades']);
     Route::get('/fuck/dahsboard', [AdminController::class, 'testLayout'])->name('fuck.page');
+    Route::get('/test/grades', [AdminController::class, 'testGradePage'])->name('test.grade');
 });
 
 // Teacher

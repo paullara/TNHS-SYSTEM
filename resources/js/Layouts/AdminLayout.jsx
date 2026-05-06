@@ -202,6 +202,14 @@ export default function InstructorLayout({ header, children }) {
                             Grade
                         </h1>
                     </Link>
+                    <Link
+                        href={route("test.grade")}
+                        className="flex items-center gap-2 mb-6"
+                    >
+                        <h1 className="text-black text-lg font-medium">
+                            Test Grade
+                        </h1>
+                    </Link>
 
                     <Link></Link>
                 </div>
