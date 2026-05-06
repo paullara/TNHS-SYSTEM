@@ -40,9 +40,7 @@ export default function StudentGrades() {
         }
     };
 
-    useEffect(() => {
-        // don't fetch anything on load
-    }, []);
+    useEffect(() => {}, []);
 
     const handlePrint = () => {
         if (typeof window !== "undefined" && window.print) {
@@ -57,7 +55,7 @@ export default function StudentGrades() {
         fetchStudentGrades(lrn.trim());
     };
 
-    const renderRemedialTable = (subjects, label, finalKey) => {
+    const renderRemedialTable = (subjects, finalKey) => {
         const failedSubjects = subjects.filter(
             (subj) => subj[finalKey] != null && subj[finalKey] < 75,
         );
@@ -478,7 +476,7 @@ export default function StudentGrades() {
             </form>
 
             {/* DATA */}
-            <div className="printable p-3 w-full flex justify-center items-center">
+            <div className="printable p-3 w-full flex flex-col justify-center items-center">
                 {!hasSearched && (
                     <p>Please search a student LRN to display grade data.</p>
                 )}

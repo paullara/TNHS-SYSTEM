@@ -41,7 +41,7 @@ class StudentDataController extends Controller
 
     public function index()
     {
-        $students = Student::all();
+        $students = Student::with('enrollments.gradeLevel')->get();
 
         return response()->json([
             'students' => $students,

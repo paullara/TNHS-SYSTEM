@@ -88,6 +88,7 @@ export default function StudentCreate() {
         try {
             const res = await axios.get("/api/students");
             setStudents(res.data.students);
+            console.log("Student", res.data.students);
         } catch (err) {
             console.error(err);
         }
@@ -243,6 +244,7 @@ export default function StudentCreate() {
                                 <th>Name</th>
                                 <th>Birthdate</th>
                                 <th>Gender</th>
+                                <th>Grade Level</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -265,6 +267,12 @@ export default function StudentCreate() {
                                             >
                                                 {s.gender}
                                             </span>
+                                        </td>
+                                        <td>
+                                            {s.enrollments.length > 0
+                                                ? s.enrollments[0]?.grade_level
+                                                      ?.name
+                                                : "N/A"}
                                         </td>
                                         <td className="flex items-start justify-start gap-3 mt-1">
                                             <button
