@@ -55,7 +55,7 @@ export default function InstructorLayout({ header, children }) {
     const unreadCount = notifications.filter((n) => !n.read_at).length;
 
     return (
-        <div className="h-screen flex bg-white p-2 gap-2">
+        <div className="h-screen flex bg-white p-2 gap-2 overflow-hidden">
             {/* Sidebar */}
             <aside className="bg-gray-50 w-38 flex flex-col h-screen rounded-md">
                 {/* Logo */}
