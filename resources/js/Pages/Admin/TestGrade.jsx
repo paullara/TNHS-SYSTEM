@@ -61,7 +61,7 @@ export default function TestGrade() {
         }
     };
     const handleSearch = (queryLrn) => {
-        console.log("SEARCHING LRN:", queryLrn); // 👈 ADD THIS
+        console.log("SEARCHING LRN:", queryLrn);
         setSearching(true);
         setHasSearched(true);
         fetchStudentGrades(queryLrn);
