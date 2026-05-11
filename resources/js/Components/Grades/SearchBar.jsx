@@ -8,12 +8,18 @@ export default function SearchBar({
 }) {
     return (
         <form
-            onSubmit={handleSearch}
+            onSubmit={(e) => {
+                e.preventDefault();
+
+                const formData = new FormData(e.target);
+                handleSearch(formData.get("lrn"));
+            }}
             className="mb-2 flex gap-2 justify-end items-end no-print w-full"
         >
             <input
+                name="lrn"
                 value={lrn}
-                onChange={(e) => setLrn(e.target.value)}
+                onChange={(e) => setLrn(e.target.value.replace(/\D/g, ""))}
                 placeholder="Enter LRN"
                 className="border rounded px-3 py-2"
             />

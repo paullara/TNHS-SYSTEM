@@ -22,13 +22,18 @@ class AdminController extends Controller
 
     public function allStudentGrades(Request $request)
     {
-        $lrn = $request->query('lrn');
+        $lrn = trim(preg_replace('/\s+/', '', $request->query('_lrn')));
 
-        $students = $lrn
-            ? Student::where('LRN', $lrn)->get()
-            : Student::all();
+        if (! $lrn) {
+            return response()->json([
+                'data' => [],
+                'message' => 'Please provide LRN to search for student grades.',
+            ]);
+        }
 
-        if ($lrn && $students->isEmpty()) {
+        $students = Student::where('LRN', $lrn)->get();
+
+        if ($students->isEmpty()) {
             return response()->json([
                 'message' => 'Student not found',
             ], 404);
@@ -165,7 +170,11 @@ class AdminController extends Controller
 
         })->flatten(1)->values();
 
-        return response()->json($data);
+        return response()->json([
+            'data' => $data,
+            'searched_lrn' => $lrn,
+            'students_found' => $students->pluck('LRN'),
+        ]);
     }
 
     public function gradePage()

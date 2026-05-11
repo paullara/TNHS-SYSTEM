@@ -183,7 +183,7 @@ export default function StudentGrades() {
                         <span className="w-[100px] border-b border-black text-center font-semibold leading-none">
                             {item?.grade_level ?? "-"}
                         </span>
-                        {/* <input className="border-0 border-b border-black bg-transparent w-[40px] text-center leading-none p-0" /> */}
+                        {/* seinput className="border-0 border-b border-black bg-transparent w-[40px] text-center leading-none p-0" /> */}
                     </div>
                     <div className="flex items-end gap-1 w-[390px]">
                         <span className="leading-none">SY:</span>

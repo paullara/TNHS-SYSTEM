@@ -21,40 +21,50 @@ export default function TestGrade() {
     const [hasSearched, setHasSearched] = useState(false);
 
     const fetchStudentGrades = async (queryLrn = "") => {
-        if (!queryLrn) {
-            setData([]);
-            setError(null);
-            setLoading(false);
-            return;
-        }
+        if (!queryLrn) return;
 
         setLoading(true);
         setError(null);
 
         try {
-            const res = await axios.get(
-                `/all-student-grades?lrn=${encodeURIComponent(queryLrn)}`,
-            );
+            const res = await axios.get("/all-student-grades", {
+                params: {
+                    lrn: queryLrn,
+                },
+            });
 
-            setData(Array.isArray(res.data) ? res.data : []);
-        } catch (err) {
-            if (err.response?.status === 404) {
-                setData([]);
-                setError("Student not found.");
+            console.log("API RESPONSE:", res.data);
+
+            if (Array.isArray(res.data.data)) {
+                setData(res.data.data);
+                console.log("DATA", res.data.data);
+                setError(null);
             } else {
-                setError("Failed to fetch student grades.");
+                setData([]);
+                setError("Unexpected response format");
+            }
+        } catch (err) {
+            console.log("ERROR:", err);
+
+            setData([]);
+
+            if (err.response?.status === 404) {
+                setError("Student not found");
+            } else if (err.response?.status === 422) {
+                setError("Invalid LRN");
+            } else {
+                setError("Server error occurred");
             }
         } finally {
             setLoading(false);
             setSearching(false);
         }
     };
-
-    const handleSearch = (e) => {
-        e.preventDefault();
+    const handleSearch = (queryLrn) => {
+        console.log("SEARCHING LRN:", queryLrn); // 👈 ADD THIS
         setSearching(true);
         setHasSearched(true);
-        fetchStudentGrades(lrn.trim());
+        fetchStudentGrades(queryLrn);
     };
 
     const handlePrint = () => {
@@ -78,16 +88,15 @@ export default function TestGrade() {
             />
 
             {loading && <p>Loading...</p>}
-            {error && <p className="text-red-500">{error}</p>}
+            {error && <p className="text-center text-red-500">{error}</p>}
             <div className="printable p-3 w-full flex justify-center items-center">
                 {!hasSearched && (
                     <p>Please search a student LRN to display grade data.</p>
                 )}
 
-                {hasSearched && data.length === 0 && !loading && !error && (
+                {hasSearched && !loading && !error && data.length === 0 && (
                     <p>No grades found for this LRN.</p>
                 )}
-
                 {data.length > 0 && (
                     <div className="w-full bf-red-500">
                         <ReportHeader />

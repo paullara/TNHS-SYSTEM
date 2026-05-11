@@ -22,6 +22,13 @@ class Student extends Model
 
     public function grades()
     {
-        return $this->hasMany(Grade::class);
+        return $this->hasManyThrough(
+            Grade::class,
+            Enrollment::class,
+            'student_id',     // Foreign key on enrollments table
+            'enrollment_id',  // Foreign key on grades table
+            'id',             // Local key on students table
+            'id'              // Local key on enrollments table
+        );
     }
 }
